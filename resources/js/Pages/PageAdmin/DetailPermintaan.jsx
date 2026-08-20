@@ -16,7 +16,8 @@ export default function DetailPermintaan({ requestData, users }) {
 
     const { data, setData, post, processing } = useForm({
         pic_id: "",
-        deadline: ""
+        deadline: new Date().toISOString().split('T')[0],
+        coverage_date: ""
     });
 
     const handleAssign = (e) => {
@@ -161,14 +162,26 @@ export default function DetailPermintaan({ requestData, users }) {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-5">
+                            <div className="grid grid-cols-2 gap-y-6 gap-x-4 border-t border-gray-100 pt-5">
+                                <div>
+                                    <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">NOMOR HANDPHONE</h3>
+                                    <p className="text-[16px] text-gray-800 font-medium">{requestData?.user?.phone_number || "-"}</p>
+                                </div>
                                 <div>
                                     <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">TANGGAL ACARA</h3>
                                     <p className="text-[16px] text-gray-800 font-medium">{formatDateId(requestData?.event_start_date)}</p>
                                 </div>
                                 <div>
+                                    <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">LOKASI ACARA</h3>
+                                    <p className="text-[16px] text-gray-800 font-medium">{requestData?.location || "-"}</p>
+                                </div>
+                                <div>
                                     <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">TIPE KONTEN</h3>
                                     <p className="text-[16px] text-gray-800 font-medium">{requestData?.content_type || "-"}</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">TIPE PROYEK</h3>
+                                    <p className="text-[16px] text-gray-800 font-medium">{requestData?.project_type || "-"}</p>
                                 </div>
                             </div>
                         </div>
@@ -192,26 +205,7 @@ export default function DetailPermintaan({ requestData, users }) {
                                     </div>
                                 </div>
 
-                                {/* buat aset apa yg diperlukannya trus pokoknya yang panjang itu iko aja */}
-                                <div className="mb-8">
-                                    <h3 className="text-[16px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">ASET YANG DIBUTUHKAN</h3>
-                                    <div className="flex flex-col gap-2">
-                                        
-                                      {requestData?.assets && requestData.assets.length > 0 ? requestData.assets.map((asset, idx) => (
-                                          <div key={idx} className="bg-[#F4F4F5] text-gray-700 px-3.5 py-2 rounded-md text-[13px] flex items-center gap-2.5 w-fit font-medium">
-                                              <svg className="w-4 h-4 text-[#1A1C1D] " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                              {asset.asset_name} ({asset.asset_type || "File"})
-                                          </div>
-                                      )) : (
-                                          <div className="text-sm text-gray-500">Tidak ada aset</div>
-                                      )}
 
-                                        <div className="bg-[#F4F4F5] text-gray-700 px-3.5 py-2 rounded-md text-[13px] flex items-center gap-2.5 w-fit font-medium">
-                                            <svg className="w-4 h-4 text-[#1A1C1D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
-                                            Copywriting Draft (Docx)
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div>
                                     <h3 className="text-[16px] font-bold text-[#1A1C1D]  uppercase tracking-wider mb-3">TAUTAN REFERENSI / GOOGLE DRIVE</h3>
@@ -257,13 +251,26 @@ export default function DetailPermintaan({ requestData, users }) {
                                             </div>
                                         )}
                                         {requestData?.status === "new_request" && (
-                                        <button 
-                                            onClick={() => setShowAssignModal(true)} 
-                                            className="bg-[#570000] hover:bg-[#400000] text-white px-4 py-3 rounded-lg text-sm font-semibold transition flex flex-col items-center justify-center gap-1.5 shadow-sm min-h-[70px] w-full sm:w-auto"
-                                        >
-                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                                            <span className="text-center leading-tight">Terima &<br/>Beri Tugas</span>
-                                        </button>
+                                            <div className="col-span-1 md:col-span-3 grid grid-cols-2 gap-4 w-full">
+                                                <button 
+                                                    onClick={() => {
+                                                        if(window.confirm("Tolak permintaan ini?")) {
+                                                            router.post(`/admin/request/${requestData?.id}/status`, { status: "rejected" });
+                                                        }
+                                                    }}
+                                                    className="border border-red-600 text-red-600 hover:bg-red-50 px-4 py-3 rounded-lg text-sm font-semibold transition flex flex-col items-center justify-center gap-1.5 shadow-sm min-h-[70px] w-full"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                    <span className="text-center leading-tight">Tolak</span>
+                                                </button>
+                                                <button 
+                                                    onClick={() => setShowAssignModal(true)} 
+                                                    className="bg-[#570000] hover:bg-[#400000] text-white px-4 py-3 rounded-lg text-sm font-semibold transition flex flex-col items-center justify-center gap-1.5 shadow-sm min-h-[70px] w-full"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                                    <span className="text-center leading-tight">Terima &<br/>Beri Tugas</span>
+                                                </button>
+                                            </div>
                                         )}
 
                                     </div>
@@ -289,15 +296,17 @@ export default function DetailPermintaan({ requestData, users }) {
                                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">Pilih PIC / Staf <span className="text-red-500">*</span></label>
                                     <select required value={data.pic_id} onChange={e => setData("pic_id", e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-[#570000] focus:border-[#570000]">
                                         <option value="">-- Pilih Staf --</option>
-                                        {users && users.map(u => (
+                                        {users && users.filter(u => u.role === 'admin').map(u => (
                                             <option key={u.id} value={u.id}>{u.name}</option>
                                         ))}
                                     </select>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tenggat Waktu Internal <span className="text-red-500">*</span></label>
-                                    <input type="date" required value={data.deadline} onChange={e => setData("deadline", e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-[#570000] focus:border-[#570000] text-gray-700" />
-                                </div>
+                                {requestData?.project_type?.toLowerCase().includes('liput') && (
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Jadwal Liputan <span className="text-red-500">*</span></label>
+                                        <input type="date" required value={data.coverage_date || ''} onChange={e => setData("coverage_date", e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-[#570000] focus:border-[#570000] text-gray-700" />
+                                    </div>
+                                )}
                             </div>
                             <div className="mt-8 flex justify-end gap-3">
                                 <button type="button" onClick={() => setShowAssignModal(false)} className="px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition">Batal</button>

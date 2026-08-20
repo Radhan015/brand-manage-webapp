@@ -160,21 +160,20 @@ export default function ManajemenKonten({ auth, projects = [], users = [], cover
                                         <div className="col-span-12 md:col-span-4 flex flex-col md:flex-row md:justify-end items-start md:items-center">
                                             <div className="flex flex-col gap-2 w-full md:w-64 shrink-0">
                                                 <span className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider">PIC TUGAS</span>
-                                                {project.content?.pic_id ? (
-                                                    <div className="flex items-center gap-3 w-full p-2 bg-[#F8F9FA] rounded-lg border border-gray-100">
-                                                        <div className="w-8 h-8 rounded-full bg-[#570000] flex items-center justify-center text-white text-[10px] font-bold shadow-sm shrink-0">
-                                                            {getInitials(users.find(u => u.id === project.content.pic_id)?.name || '')}
-                                                        </div>
-                                                        <div className="flex flex-col overflow-hidden">
-                                                            <span className="text-sm font-bold text-gray-900 truncate">{(users.find(u => u.id === project.content.pic_id)?.name || '')}</span>
-                                                        </div>
-                                                    </div>
+                                                {project.status === 'new_request' ? (
+                                                    <Link href={`/admin/detail-permintaan/${project.id}`} className="text-center w-full py-2 bg-[#F4F4F5] hover:bg-gray-200 border border-gray-300 text-gray-700 rounded-lg text-sm font-semibold transition">
+                                                        Belum Diterima (Review)
+                                                    </Link>
                                                 ) : (
                                                     <div className="relative w-full">
                                                         <select 
-                                                            value=""
-                                                            onChange={(e) => handleAssign(project.id, e.target.value)}
-                                                            className="w-full pl-3 pr-8 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-[#570000] transition shadow-sm appearance-none cursor-pointer"
+                                                            value={project.content?.pic_id || ""}
+                                                            onChange={(e) => {
+                                                                if(window.confirm("Ganti PIC tugas ini?")) {
+                                                                    handleAssign(project.id, e.target.value);
+                                                                }
+                                                            }}
+                                                            className="w-full pl-3 pr-8 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-[#570000] transition shadow-sm appearance-none cursor-pointer"
                                                         >
                                                             <option value="" disabled>-- Pilih Staf --</option>
                                                             {staffList.filter(u => String(u.role).toLowerCase().includes('admin')).map((staff) => (<option key={staff.id} value={staff.id}>{staff.name}</option>))}
