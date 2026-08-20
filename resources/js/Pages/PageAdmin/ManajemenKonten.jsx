@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { getInitials } from "../../utils";
 import { Head, Link, useForm, router } from '@inertiajs/react';
 
-export default function ManajemenKonten({ auth, projects = [], users = [], coverages = [] }) {
+export default function ManajemenKonten({ auth, flash, projects = [], users = [], coverages = [] }) {
     // --- STATE DATA DUMMY TUGAS KONTEN (SUDAH DIKELOMPOKKAN) ---
     // Struktur diubah: 1 Judul Proyek bisa memiliki banyak tugas (tasks)
 
@@ -51,10 +51,9 @@ export default function ManajemenKonten({ auth, projects = [], users = [], cover
         }
     };
 
+    const [deleteId, setDeleteId] = useState(null);
     const deleteCoverage = (id) => {
-        if (confirm('Hapus jadwal liputan ini?')) {
-            destroy(`/admin/coverages/${id}`);
-        }
+        setDeleteId(id);
     };
 
 
@@ -130,6 +129,15 @@ export default function ManajemenKonten({ auth, projects = [], users = [], cover
                 {/* main kontennya */}
                 <main className="p-8 md:p-12 relative z-10 w-full max-w-[1200px] mx-auto">
                     
+                    {flash?.success && (
+                        <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center gap-3 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="font-medium text-sm">{flash.success}</span>
+                        </div>
+                    )}
+
                     {/* bagian manajemen penugasan kontennya */}
                     <section className="mb-14">
                         
@@ -311,6 +319,29 @@ export default function ManajemenKonten({ auth, projects = [], users = [], cover
             )}
 
         </div>
+
+        {deleteId && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                <div className="bg-white rounded-xl w-full max-w-sm p-6 shadow-xl text-center">
+                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">Yakin ingin menghapus jadwal liputan ini?</h3>
+                    <p className="text-sm text-gray-500 mb-6">Data tidak dapat dikembalikan setelah dihapus.</p>
+                    <div className="flex gap-3">
+                        <button onClick={() => setDeleteId(null)} className="flex-1 py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold transition">
+                            Batal
+                        </button>
+                        <button onClick={() => { router.delete(`/admin/coverages/${deleteId}`); setDeleteId(null); }} className="flex-1 py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition">
+                            Ya, Hapus
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+
     </div>
   );
 }

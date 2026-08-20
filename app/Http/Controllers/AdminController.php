@@ -141,6 +141,6 @@ class AdminController extends Controller
     public function destroyCoverage($id)
     {
         \App\Models\Coverage::findOrFail($id)->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Jadwal liputan berhasil dihapus!');
     }
 }
