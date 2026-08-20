@@ -10,10 +10,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
+#[Fillable(['name', 'email', 'password_hash', 'role', 'phone_number'])]
+#[Hidden(['password_hash', 'remember_token'])]
 class User extends Authenticatable
 {
+    protected $table = 'users_simaco';
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+    
+    public function getAuthPasswordName()
+    {
+        return 'password_hash';
+    }
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
@@ -26,7 +37,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password_hash' => 'hashed',
         ];
     }
 }

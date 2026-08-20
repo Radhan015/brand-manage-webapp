@@ -1,87 +1,72 @@
-import React, { useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
-export default function RequestForm() {
-    const [jenisAcara, setJenisAcara] = useState('sehari');
+export default function RequestForm({ auth, flash }) {
+    const { data, setData, post, processing, errors, transform, reset } = useForm({
+        event_name: '',
+        description: '',
+        project_type: '',
+        content_type: 'sehari',
+        event_start_date: '',
+        event_end_date: '',
+        theme_category_group: '',
+        drive_url: '',
+        additional_notes: '',
+    });
+
+    const submit = (e) => {
+        e.preventDefault();
+        transform((currentData) => {
+            let extraNotes = '';
+            if (currentData.durasi_acara_start || currentData.durasi_acara_end) {
+                extraNotes += `\n[Durasi Acara: ${currentData.durasi_acara_start || '?'} s/d ${currentData.durasi_acara_end || '?'}]`;
+            }
+            if (currentData.content_type === 'lebih_dari_sehari' && (currentData.durasi_konten_start || currentData.durasi_konten_end)) {
+                extraNotes += `\n[Durasi Konten: ${currentData.durasi_konten_start || '?'} s/d ${currentData.durasi_konten_end || '?'}]`;
+            }
+            return {
+                ...currentData,
+                additional_notes: extraNotes ? (currentData.additional_notes + '\n\n---\nCatatan Sistem:' + extraNotes).trim() : currentData.additional_notes,
+            };
+        });
+        post('/request-form', {
+            onSuccess: () => reset(), // Reset form on success
+        });
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans text-gray-800 overflow-x-hidden pb-12">
             <Head title="Content Request | SIMACO" />
 
-            {/* NAVBAR */}
-            <nav className="w-full bg-white shadow-sm py-4 px-8 flex justify-between items-center fixed top-0 z-50">
-                <div className="flex items-center gap-2">
-                    <Link href="/">
-                        <img
-                            src="/images/Homepage/logoSimaco-removebg-preview.png"
-                            alt="Logo SiMaCo"
-                            className="h-12 w-auto object-contain"
-                        />
-                    </Link>
-                </div>
-
-                <div className="hidden md:flex space-x-8 font-medium text-gray-600">
-                    <Link href="/#tentang" className="hover:text-red-800 transition">Tentang</Link>
-                    <Link href="/#benefits" className="hover:text-red-800 transition">Benefits</Link>
-                    <Link href="/#team" className="hover:text-red-800 transition">Branding Team</Link>
-                    <Link href="/request-form" className="text-red-800 border-b-2 border-red-800 pb-1">Request</Link>
-                    <Link href="/#contact" className="hover:text-red-800 transition">Contact Us</Link>
-                </div>
-
-                <Link
-                    href="/login"
-                    className="bg-[#8B0000] text-white px-6 py-2 rounded-md font-semibold hover:bg-red-900 transition"
-                >
-                    Login
-                </Link>
-            </nav>
-
             {/* header*/}
-            <div className="pt-28 pb-10 text-center w-full font-sans">
-                <h1 className="text-[3.5rem] font-black text-[#570000] mb-4 tracking-tight">
-                    Content Request
-                </h1>
-                <p className="text-[#5D3F3B] text-[0.95rem] max-w-xl mx-auto">
-                    Selesaikan langkah-langkah di bawah ini untuk mengirimkan permintaan Anda ke tim Branding FIF.
-                </p>
+            <div className="pt-10 pb-10 w-full font-sans max-w-4xl mx-auto px-4">
+                <Link href="/my-requests" className="inline-flex items-center gap-2 text-[#800000] hover:text-red-900 font-semibold mb-6 transition">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Kembali ke Dashboard Request
+                </Link>
+                <div className="text-center">
+                    <h1 className="text-[3.5rem] font-black text-[#570000] mb-4 tracking-tight">
+                        Content Request
+                    </h1>
+                    <p className="text-[#5D3F3B] text-[0.95rem] max-w-xl mx-auto">
+                        Selesaikan langkah-langkah di bawah ini untuk mengirimkan permintaan Anda ke tim Branding FIF.
+                    </p>
+                </div>
             </div>
 
             {/* kesulurahnnaya Form */}
             <div className="max-w-4xl mx-auto px-4">
-                <div className="bg-white border border-[#E7BDB6] rounded-xl p-8 md:p-12 shadow-sm">
-                    <form>
-                        <div className="mb-10">
-                            <h2 className="text-[22px] font-bold text-[#291714] mb-1">Data Pribadi Perequest</h2>
-                            <p className="text-xs font-bold text-[#291714] mb-6">(*) Isian Wajib</p>
-                            {/* senua input data userna */}
-                            <div className="space-y-5">
-                                <div>
-                                    <label className="block text-sm font-medium text-[#291714] mb-2">Nama Lengkap*</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Masukkan nama lengkap kamu..."
-                                        className="w-full px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-[#291714] mb-2">Email*</label>
-                                    <input
-                                        type="email"
-                                        placeholder="Masukkan email kamu..."
-                                        className="w-full px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-[#291714] mb-2">Nomor HP*</label>
-                                    <input
-                                        type="tel"
-                                        placeholder="Masukkan nomor hp kamu..."
-                                        className="w-full px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400"
-                                    />
-                                </div>
-                            </div>
+                <div className="bg-white rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.05)] border border-gray-100 p-8 md:p-12">
+                    {flash?.success && (
+                        <div className="mb-8 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="font-medium">{flash.success}</span>
                         </div>
-
+                    )}
+                    <form onSubmit={submit}>
                         {/* ini Request form nya */}
                         <div className="mb-10">
                             <h2 className="text-xl font-bold text-[#291714] mb-1">Request Form</h2>
@@ -92,36 +77,72 @@ export default function RequestForm() {
                                     <label className="block text-sm font-medium text-[#291714] mb-2">Nama Acara*</label>
                                     <input
                                         type="text"
+                                        required
                                         placeholder="Masukkan nama resmi acara..."
                                         className="w-full px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400"
+                                        value={data.event_name}
+                                        onChange={e => setData('event_name', e.target.value)}
                                     />
+                                    {errors.event_name && <p className="text-red-500 text-xs mt-1">{errors.event_name}</p>}
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-[#291714] mb-2">Deskripsi Acara*</label>
                                     <textarea
                                         rows="4"
+                                        required
                                         placeholder="Berikan gambaran singkat tentang tujuan acara..."
                                         className="w-full px-4 py-3 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400 resize-none"
+                                        value={data.description}
+                                        onChange={e => setData('description', e.target.value)}
                                     ></textarea>
+                                    {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
                                 </div>
-                                {/* durasi form  */}
+
+                                {/* Tipe Proyek */}
+                                <div>
+                                    <label className="block text-sm font-medium text-[#291714] mb-2">Tipe Proyek*</label>
+                                    <select
+                                        required
+                                        className="w-full px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 bg-white"
+                                        value={data.project_type}
+                                        onChange={e => setData('project_type', e.target.value)}
+                                    >
+                                        <option value="" disabled>Pilih tipe proyek...</option>
+                                        <option value="Graphic Design">Graphic Design</option>
+                                        <option value="Video">Video</option>
+                                        <option value="Photography">Photography</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                    {errors.project_type && <p className="text-red-500 text-xs mt-1">{errors.project_type}</p>}
+                                </div>
+
+                                {/* Durasi Acara */}
                                 <div>
                                     <label className="block text-sm font-medium text-[#291714] mb-2">Durasi Acara*</label>
                                     <div className="flex items-center gap-3">
                                         <input
                                             type="date"
+                                            required
                                             className="px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700"
+                                            value={data.durasi_acara_start || ''}
+                                            onChange={e => {
+                                                setData(prev => ({...prev, durasi_acara_start: e.target.value, event_end_date: e.target.value}));
+                                            }}
                                         />
                                         <span className="text-gray-500 font-bold">-</span>
                                         <input
                                             type="date"
+                                            required
                                             className="px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700"
+                                            value={data.durasi_acara_end || ''}
+                                            onChange={e => setData('durasi_acara_end', e.target.value)}
                                         />
                                     </div>
+                                    {errors.event_end_date && <p className="text-red-500 text-xs mt-1">{errors.event_end_date}</p>}
                                 </div>
 
-                                {/* ini buat pilihan jenis acara milih yg mana sehari atau lebih dari sehari*/}
+                                {/* Jenis Acara */}
                                 <div>
                                     <label className="block text-sm font-medium text-[#291714] mb-3">Jenis Acara*</label>
                                     <div className="flex flex-col gap-2">
@@ -130,8 +151,9 @@ export default function RequestForm() {
                                                 type="radio"
                                                 name="jenis_acara"
                                                 value="sehari"
-                                                checked={jenisAcara === 'sehari'}
-                                                onChange={() => setJenisAcara('sehari')}
+                                                required
+                                                checked={data.content_type === 'sehari'}
+                                                onChange={() => setData('content_type', 'sehari')}
                                                 className="w-4 h-4 text-[#800000] border-gray-300 focus:ring-[#8B0000]"
                                             />
                                             <span className="text-[#000000]">Sehari</span>
@@ -141,68 +163,77 @@ export default function RequestForm() {
                                                 type="radio"
                                                 name="jenis_acara"
                                                 value="lebih_dari_sehari"
-                                                checked={jenisAcara === 'lebih_dari_sehari'}
-                                                onChange={() => setJenisAcara('lebih_dari_sehari')}
+                                                required
+                                                checked={data.content_type === 'lebih_dari_sehari'}
+                                                onChange={() => setData('content_type', 'lebih_dari_sehari')}
                                                 className="w-4 h-4 text-[#800000] border-gray-300 focus:ring-[#8B0000]"
                                             />
                                             <span className="text-[#000000]">Lebih dari sehari</span>
                                         </label>
                                     </div>
+                                    {errors.content_type && <p className="text-red-500 text-xs mt-1">{errors.content_type}</p>}
                                 </div>
 
-                                {/* ini buat nama serial kontennya dan durasi kontennya kalo yg dipilih lebih dari sehari */}
-                                {jenisAcara === 'lebih_dari_sehari' && (
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-800 mb-2">Nama Serial Konten</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Masukkan nama serial konten..."
-                                            className="w-full px-4 py-2.5 border border-[#EACACA] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400"
-                                        />
+                                {/* Form untuk multi hari */}
+                                {data.content_type === 'lebih_dari_sehari' && (
+                                    <>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-800 mb-2">Nama Serial Konten</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Masukkan nama serial konten..."
+                                                className="w-full px-4 py-2.5 border border-[#EACACA] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400"
+                                                value={data.theme_category_group}
+                                                onChange={e => setData('theme_category_group', e.target.value)}
+                                            />
+                                        </div>
                                         <div>
                                             <label className="block text-sm font-medium text-[#291714] mb-2">Durasi Konten*</label>
                                             <div className="flex items-center gap-3">
                                                 <input
                                                     type="date"
                                                     className="px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700"
+                                                    value={data.durasi_konten_start || ''}
+                                                    onChange={e => setData('durasi_konten_start', e.target.value)}
                                                 />
                                                 <span className="text-gray-500 font-bold">-</span>
                                                 <input
                                                     type="date"
                                                     className="px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700"
+                                                    value={data.durasi_konten_end || ''}
+                                                    onChange={e => setData('durasi_konten_end', e.target.value)}
                                                 />
                                             </div>
                                         </div>
-                                    </div>
-                                )}
-                                {/* nah kalo yang ini jika hanya sehari */}
-                                {jenisAcara === 'sehari' && (
-                                    <div>
-                                        <label className="block text-sm font-medium text-[#291714] mb-2">Tenggat Waktu Konten</label>
-                                        <input
-                                            type="date"
-                                            className="px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#800000] text-gray-700"
-                                        />
-                                    </div>
+                                    </>
                                 )}
 
+                                {/* Tenggat Waktu Konten */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[#291714] mb-2">Media terkait</label>
+                                    <label className="block text-sm font-medium text-[#291714] mb-2">Tenggat Waktu Konten</label>
+                                    <input
+                                        type="date"
+                                        required
+                                        className="px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#800000] text-gray-700 w-full sm:w-auto"
+                                        value={data.event_start_date}
+                                        onChange={e => setData('event_start_date', e.target.value)}
+                                    />
+                                    {errors.event_start_date && <p className="text-red-500 text-xs mt-1">{errors.event_start_date}</p>}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-[#291714] mb-2">Media terkait*</label>
 
                                     {/* link inputnya */}
                                     <textarea
                                         rows="3"
+                                        required
                                         placeholder="Masukan link disini..."
                                         className="w-full px-4 py-3 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400 resize-none"
+                                        value={data.drive_url}
+                                        onChange={e => setData('drive_url', e.target.value)}
                                     ></textarea>
-
-                                    {/* ini buat drag and drop aja */}
-                                    <div className="w-full h-40 bg-[#FBF0F0] border-2 border-dashed border-[#D4A3A3] rounded-md flex flex-col items-center justify-center cursor-pointer hover:bg-[#f8e9e9] transition mt-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-[#995959] mb-2" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                                        </svg>
-                                        <span className="text-[#995959] text-sm font-medium">Masukkan media terkait...</span>
-                                    </div>
+                                    {errors.drive_url && <p className="text-red-500 text-xs mt-1">{errors.drive_url}</p>}
                                 </div>
 
                                 <div>
@@ -211,6 +242,8 @@ export default function RequestForm() {
                                         rows="4"
                                         placeholder="Berikan catatan tambahan untuk tim Branding FIF"
                                         className="w-full px-4 py-3 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 placeholder-gray-400 resize-none"
+                                        value={data.additional_notes}
+                                        onChange={e => setData('additional_notes', e.target.value)}
                                     ></textarea>
                                 </div>
                             </div>
@@ -219,7 +252,8 @@ export default function RequestForm() {
                         {/* tombol sumitnya */}
                         <div className="flex justify-end border-t border-[#E5C3C3] pt-6">
                             <button
-                                type="button"
+                                type="submit"
+                                disabled={processing}
                                 className="bg-[#570000] hover:bg-[#410000] text-white px-8 py-2.5 rounded-full font-semibold flex items-center gap-2 transition"
                             >
                                 Submit

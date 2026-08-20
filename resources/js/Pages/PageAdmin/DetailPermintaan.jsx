@@ -1,8 +1,46 @@
 import React, { useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { getInitials } from "../../utils";
+import { Head, Link, usePage, useForm, router } from "@inertiajs/react";
 
-export default function DetailPermintaan() {
+export default function DetailPermintaan({ requestData, users }) {
+    const { auth } = usePage().props;
+    const formatDateId = (dateString) => {
+        if (!dateString) return "-";
+        return new Date(dateString).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    };
+
+
+    const [showAssignModal, setShowAssignModal] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [outputUrl, setOutputUrl] = useState("");
+
+    const { data, setData, post, processing } = useForm({
+        pic_id: "",
+        deadline: ""
+    });
+
+    const handleAssign = (e) => {
+        e.preventDefault();
+        post(`/admin/request/${requestData?.id}/assign`, {
+            preserveScroll: true,
+            onSuccess: () => setShowAssignModal(false)
+        });
+    };
+
+    const handleComplete = (e) => {
+        e.preventDefault();
+        router.post(`/admin/request/${requestData?.id}/status`, { 
+            status: "completed", 
+            output_url: outputUrl 
+        }, {
+            preserveScroll: true,
+            onSuccess: () => setShowConfirmModal(false)
+        });
+    };
     const [isApproved, setIsApproved] = useState(false);
+    const isCompleted = requestData?.status === "completed";
+    const isInProgress = requestData?.status === "in_progress";
+    const statusText = isCompleted ? "Selesai" : (isInProgress ? "Berjalan" : "Pending");
     const [selectedStaff, setSelectedStaff] = useState("");
     const staffList = ['Andi Wijaya', 'Budi Santoso', 'Siti Rahmawati', 'Rina Saraswati'];
 
@@ -13,7 +51,7 @@ export default function DetailPermintaan() {
             {/* sidebar buat pagenya */}
             <aside className="w-64 bg-[#FCFCFC] border-r border-gray-200 fixed h-full z-20 flex flex-col pt-6">
                 <div className="px-8 mb-10">
-                    <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-25 w-auto" />
+                    <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-24 w-auto object-contain" />
                 </div>
                 
                 <div className="px-6 mb-2">
@@ -21,24 +59,31 @@ export default function DetailPermintaan() {
                 </div>
 
                 <nav className="flex flex-col gap-1 px-4">
-                    <Link href="/dashboard" className="flex items-center gap-3 text-[#5A413D] hover:bg-gray-100 hover:text-gray-900 px-4 py-3 rounded-lg font-medium transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                    <Link href="/admin/dashboard" className="flex items-center gap-3 text-[#5A413D] hover:bg-gray-100 hover:text-gray-900 px-4 py-3 rounded-lg font-medium transition mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
                         Ringkasan Dashboard
                     </Link>
-                    <Link href="/asset" className="flex items-center gap-3 text-[#5A413D] hover:bg-gray-100 hover:text-gray-900 px-4 py-3 rounded-lg font-medium transition">
+                    <Link href="/admin/asset" className="flex items-center gap-3 text-[#5A413D] hover:bg-gray-100 hover:text-gray-900 px-4 py-3 rounded-lg font-medium transition mt-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg>
                         Aset
                     </Link>
-                    <Link href="/permintaan" className="flex items-center gap-3 bg-[#570000] text-white px-4 py-3 rounded-lg font-medium shadow-sm mt-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" /></svg>
+                    <Link href="/admin/permintaan" className="flex items-center gap-3 bg-[#570000] text-white px-4 py-3 rounded-lg font-medium shadow-sm mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" /></svg>
                         Manajemen Permintaan
                     </Link>
-
-                    <Link href="/manajemen-konten" className="flex items-center gap-3 text-[#5A413D] hover:bg-gray-100 hover:text-gray-900 px-4 py-3 rounded-lg font-medium transition mt-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
-                        Manajemen Konten
+                    <Link href="/admin/manajemen-konten" className="flex items-center gap-3 text-[#5A413D] hover:bg-gray-100 hover:text-gray-900 px-4 py-3 rounded-lg font-medium transition mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" /></svg>
+                        Manajemen Penugasan
                     </Link>
                 </nav>
+                <div className="mt-auto px-4 mb-6">
+                    <Link href={route("logout")} method="post" as="button" className="flex items-center gap-3 text-[#5A413D] hover:bg-red-50 hover:text-red-700 px-4 py-3 rounded-lg font-bold transition w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                        </svg>
+                        Logout
+                    </Link>
+                </div>
             </aside>
 
             {/* wrapper kanan */}
@@ -55,14 +100,14 @@ export default function DetailPermintaan() {
 
                         {/* info user atau admin */}
                         <div className="flex items-center gap-3">
-                            <div className="text-right">
-                                <p className="text-[14px] font-bold text-[#1A1C1D] leading-none">Admin User</p>
-                                <p className="text-[10px] font-bold text-[#5A413D] mt-1 tracking-wider uppercase">SUPER ADMIN</p>
-                            </div>
-                            <div className="w-10 h-10 rounded-lg bg-[#570000] flex items-center justify-center text-white shadow-sm cursor-pointer">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-                            </div>
-                        </div>
+            <div className="text-right">
+                <p className="text-[14px] font-bold text-[#1A1C1D] leading-none">{auth?.user?.name || "Admin"}</p>
+                <p className="text-[10px] font-bold text-[#5A413D] mt-1 tracking-wider uppercase">{auth?.user?.email || "admin@simaco.com"}</p>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#570000] flex items-center justify-center text-white shadow-sm cursor-pointer">
+                <span className="font-bold text-xs">{getInitials(auth?.user?.name)}</span>
+            </div>
+        </div>
                     </div>
                 </header>
 
@@ -70,7 +115,7 @@ export default function DetailPermintaan() {
                 <main className="p-8 md:p-12 relative z-10 w-full max-w-[1100px]">
                     
                     {/* button kembali ke page permintaan */}
-                    <Link href="/permintaan" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#570000] transition font-medium mb-6">
+                    <Link href="/admin/permintaan" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#570000] transition font-medium mb-6">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                         Kembali ke Daftar Permintaan
                     </Link>
@@ -79,16 +124,16 @@ export default function DetailPermintaan() {
                     <div className="mb-8">
                         <div className="flex items-center gap-4 mb-2 flex-wrap">
                             <h1 className="text-[32px] md:text-[48px] font-bold text-[#1A1C1D] leading-tight tracking-tight">
-                                Brosur Penerimaan Mahasiswa Baru 2024
+                                {requestData?.event_name || "Tidak Ada Judul"}
                             </h1>
                             {/* status permintaannya */}
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-bold border shadow-sm mt-1 ${isApproved ? 'bg-gray-100 text-gray-700 border-gray-200' : 'bg-red-50 text-red-700 border-red-100'}`}>
-                                <span className={`w-2 h-2 rounded-full ${isApproved ? 'bg-gray-400' : 'bg-red-500'}`}></span>
-                                {isApproved ? 'Berjalan' : 'Pending'}
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-bold border shadow-sm mt-1 ${isCompleted ? 'bg-green-100 text-green-700 border-green-200' : (isInProgress ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-red-50 text-red-700 border-red-100')}`}>
+                                <span className={`w-2 h-2 rounded-full ${isCompleted ? 'bg-green-500' : (isInProgress ? 'bg-blue-500' : 'bg-red-500')}`}></span>
+                                {statusText}
                             </span>
                         </div>
                         <p className="text-[#5A413D] text-[18px]">
-                            ID Permintaan: REQ-2023-0842 | Disubmit pada: 12 Oktober 2023, 14:30 WIB
+                            ID Permintaan: REQ-{requestData?.id} | Disubmit pada: {formatDateId(requestData?.created_at)}
                         </p>
                     </div>
 
@@ -107,11 +152,11 @@ export default function DetailPermintaan() {
                                 <div className="flex items-center gap-3">
                                     {/* profile foto pemohonnya */} 
                                     <div className="w-10 h-10 rounded-full bg-[#570000] flex items-center justify-center text-xs font-bold text-white shrink-0">
-                                        DR
-                                    </div>
+                                          {getInitials(requestData?.user?.name || "AD")}
+                                      </div>
                                     <div>
-                                        <p className="text-[16px] font-bold text-gray-900 leading-snug">Dr. Rina Saraswati</p>
-                                        <p className="text-[16px] text-[#5A413D] mt-0.5">Fakultas Ilmu Komunikasi</p>
+                                        <p className="text-[16px] font-bold text-gray-900 leading-snug">{requestData?.user?.name || "Unknown"}</p>
+                                        <p className="text-[16px] text-[#5A413D] mt-0.5">{requestData?.user?.email || ""}</p>
                                     </div>
                                 </div>
                             </div>
@@ -119,11 +164,11 @@ export default function DetailPermintaan() {
                             <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-5">
                                 <div>
                                     <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">TANGGAL ACARA</h3>
-                                    <p className="text-[16px] text-gray-800 font-medium">15 November<br/>2023</p>
+                                    <p className="text-[16px] text-gray-800 font-medium">{formatDateId(requestData?.event_start_date)}</p>
                                 </div>
                                 <div>
                                     <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">TIPE KONTEN</h3>
-                                    <p className="text-[16px] text-gray-800 font-medium">Sehari</p>
+                                    <p className="text-[16px] text-gray-800 font-medium">{requestData?.content_type || "-"}</p>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +188,7 @@ export default function DetailPermintaan() {
                                 <div className="mb-8">
                                     <h3 className="text-[16px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">DESKRIPSI PEKERJAAN</h3>
                                     <div className="bg-[#F8F9FA] p-5 rounded-lg text-[16px] text-[#1A1C1D] leading-relaxed">
-                                        Membutuhkan desain ulang brosur penerimaan mahasiswa baru tahun 2024. Desain harus mencerminkan identitas visual universitas yang baru (Maroon & Gold), menonjolkan pencapaian fakultas, dan memiliki versi resolusi tinggi untuk cetak A4 serta versi PDF interaktif untuk distribusi WhatsApp.
+                                        {requestData?.description || "-"}
                                     </div>
                                 </div>
 
@@ -151,14 +196,16 @@ export default function DetailPermintaan() {
                                 <div className="mb-8">
                                     <h3 className="text-[16px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">ASET YANG DIBUTUHKAN</h3>
                                     <div className="flex flex-col gap-2">
-                                        <div className="bg-[#F4F4F5] text-gray-700 px-3.5 py-2 rounded-md text-[13px] flex items-center gap-2.5 w-fit font-medium">
-                                            <svg className="w-4 h-4 text-[#1A1C1D] " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                            Foto Gedung Utama (High-Res)
-                                        </div>
-                                        <div className="bg-[#F4F4F5] text-gray-700 px-3.5 py-2 rounded-md text-[13px] flex items-center gap-2.5 w-fit font-medium">
-                                            <svg className="w-4 h-4 text-[#1A1C1D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                                            Logo Vector (Primary & Secondary)
-                                        </div>
+                                        
+                                      {requestData?.assets && requestData.assets.length > 0 ? requestData.assets.map((asset, idx) => (
+                                          <div key={idx} className="bg-[#F4F4F5] text-gray-700 px-3.5 py-2 rounded-md text-[13px] flex items-center gap-2.5 w-fit font-medium">
+                                              <svg className="w-4 h-4 text-[#1A1C1D] " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                              {asset.asset_name} ({asset.asset_type || "File"})
+                                          </div>
+                                      )) : (
+                                          <div className="text-sm text-gray-500">Tidak ada aset</div>
+                                      )}
+
                                         <div className="bg-[#F4F4F5] text-gray-700 px-3.5 py-2 rounded-md text-[13px] flex items-center gap-2.5 w-fit font-medium">
                                             <svg className="w-4 h-4 text-[#1A1C1D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
                                             Copywriting Draft (Docx)
@@ -189,25 +236,36 @@ export default function DetailPermintaan() {
                                     
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         {/* button buat acc */}
+                                        
+                                        {/* button buat acc / Tandai Selesai */}
+                                        {requestData?.status === "in_progress" && (
+                                            <div className="flex flex-col sm:flex-row items-center gap-3 w-full mt-4">
+                                                <input
+                                                    type="url"
+                                                    placeholder="Masukkan URL Output (Drive/Link)"
+                                                    value={outputUrl}
+                                                    onChange={(e) => setOutputUrl(e.target.value)}
+                                                    className="border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-[#570000] focus:border-[#570000] w-full sm:w-64"
+                                                />
+                                                <button
+                                                    onClick={() => setShowConfirmModal(true)}
+                                                    disabled={!outputUrl}
+                                                    className="bg-[#570000] hover:bg-[#400000] text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-sm disabled:opacity-50 min-h-[44px] w-full sm:w-auto"
+                                                >
+                                                    Tandai Selesai
+                                                </button>
+                                            </div>
+                                        )}
+                                        {requestData?.status === "new_request" && (
                                         <button 
-                                            onClick={() => setIsApproved(true)} 
-                                            className="bg-[#570000] hover:bg-[#400000] text-white px-4 py-3 rounded-lg text-sm font-semibold transition flex flex-col items-center justify-center gap-1.5 shadow-sm min-h-[70px]"
+                                            onClick={() => setShowAssignModal(true)} 
+                                            className="bg-[#570000] hover:bg-[#400000] text-white px-4 py-3 rounded-lg text-sm font-semibold transition flex flex-col items-center justify-center gap-1.5 shadow-sm min-h-[70px] w-full sm:w-auto"
                                         >
-                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                            <span className="text-center leading-tight">Setujui<br/>Permintaan</span>
+                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                            <span className="text-center leading-tight">Terima &<br/>Beri Tugas</span>
                                         </button>
-                                        
-                                        {/* buat tugasin ke staff */}
-                                        <button className="bg-[#F4F4F5] hover:bg-gray-200 border border-gray-300 text-gray-800 px-4 py-3 rounded-lg text-sm font-semibold transition flex flex-col items-center justify-center gap-1.5 min-h-[70px]">
-                                            <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
-                                            <span className="text-center leading-tight">Tugaskan ke<br/>Staf</span>
-                                        </button>
-                                        
-                                        {/* button buat nolak */}  
-                                        <button className="bg-white hover:bg-red-50 border border-[#BA1A1A] text-[#BA1A1A] px-4 py-3 rounded-lg text-sm font-semibold transition flex flex-col items-center justify-center gap-1.5 min-h-[70px]">
-                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                            <span className="text-center leading-tight">Tolak</span>
-                                        </button>
+                                        )}
+
                                     </div>
                                 </div>
                             )}
@@ -215,6 +273,60 @@ export default function DetailPermintaan() {
                     </div>
                 </main>
             </div>
+
+            {showAssignModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-fade-in-up">
+                        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                            <h3 className="text-lg font-bold text-gray-900">Beri Tugas ke Staf</h3>
+                            <button onClick={() => setShowAssignModal(false)} className="text-gray-400 hover:text-gray-600 transition">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+                        <form onSubmit={handleAssign} className="p-6">
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Pilih PIC / Staf <span className="text-red-500">*</span></label>
+                                    <select required value={data.pic_id} onChange={e => setData("pic_id", e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-[#570000] focus:border-[#570000]">
+                                        <option value="">-- Pilih Staf --</option>
+                                        {users && users.map(u => (
+                                            <option key={u.id} value={u.id}>{u.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tenggat Waktu Internal <span className="text-red-500">*</span></label>
+                                    <input type="date" required value={data.deadline} onChange={e => setData("deadline", e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-[#570000] focus:border-[#570000] text-gray-700" />
+                                </div>
+                            </div>
+                            <div className="mt-8 flex justify-end gap-3">
+                                <button type="button" onClick={() => setShowAssignModal(false)} className="px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition">Batal</button>
+                                <button type="submit" disabled={processing} className="px-5 py-2.5 text-sm font-semibold text-white bg-[#570000] hover:bg-[#400000] rounded-lg shadow-sm transition disabled:opacity-50">Tugaskan Sekarang</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            
+            {showConfirmModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-fade-in-up">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">Selesaikan Tugas?</h3>
+                            <p className="text-sm text-gray-500 mb-6">Tugas ini akan ditandai sebagai selesai dan URL output akan dikirimkan ke pemohon.</p>
+                            <div className="flex flex-col gap-3">
+                                <button onClick={handleComplete} className="w-full bg-[#570000] hover:bg-[#400000] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition">Ya, Selesaikan</button>
+                                <button onClick={() => setShowConfirmModal(false)} className="w-full text-gray-600 hover:bg-gray-100 px-4 py-2.5 rounded-lg text-sm font-semibold transition">Batal</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

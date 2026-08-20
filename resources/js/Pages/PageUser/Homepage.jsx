@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 
-export default function Homepage() {
+export default function Homepage({ auth }) {
     const [activeSection, setActiveSection] = useState('tentang');
     const scrollToSection = (e, sectionId) => {
         e.preventDefault();
@@ -42,7 +42,7 @@ export default function Homepage() {
         { id: 'tentang', label: 'Tentang' },
         { id: 'benefits', label: 'Benefits' },
         { id: 'team', label: 'Branding Team' },
-        { id: 'request', label: 'Request' },
+        { id: 'request', label: 'Dashboard Request' },
         { id: 'contact', label: 'Contact Us' },
     ];
 
@@ -76,12 +76,28 @@ export default function Homepage() {
                     ))}
                 </div>
 
-                <Link
-                    href="/login"
-                    className="bg-[#800000] text-white px-6 py-2 rounded-md font-semibold hover:bg-red-900 transition"
-                >
-                    Login
-                </Link>
+                {auth?.user ? (
+                    <div className="relative group cursor-pointer">
+                        <div className="text-right hidden sm:block pr-2">
+                            <p className="text-sm font-bold text-gray-900">{auth.user.name}</p>
+                            <p className="text-xs text-gray-500">{auth.user.email}</p>
+                        </div>
+                        
+                        {/* Dropdown Menu */}
+                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pt-1 pb-1">
+                            <Link href={route('logout')} method="post" as="button" className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                Log Out
+                            </Link>
+                        </div>
+                    </div>
+                ) : (
+                    <Link
+                        href="/login"
+                        className="bg-[#800000] text-white px-6 py-2 rounded-md font-semibold hover:bg-red-900 transition"
+                    >
+                        Login
+                    </Link>
+                )}
             </nav>
 
             {/* ini Bagian Hero */}
@@ -101,9 +117,9 @@ export default function Homepage() {
                     <p className="text-[#5A413D] mb-8 text-lg leading-relaxed max-w-xl">
                         SIMACO menyederhanakan proses permintaan konten, memastikan konsistensi brand, dan mempercepat distribusi aset untuk seluruh kebutuhan akademik dan promosi Fakultas Informatika.
                     </p>
-                    <a href="/request-form" className="inline-block bg-[#800000] text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-900 transition shadow-lg text-lg">
-                        Request Sekarang
-                    </a>
+                    <Link href="/my-requests" className="inline-block bg-[#800000] text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-900 transition shadow-lg text-lg">
+                        Dashboard Request
+                    </Link>
                 </div>
             </section>
 
@@ -214,8 +230,8 @@ export default function Homepage() {
                     <p className="mb-8 text-[#5A413D]">
                         SIMACO menyederhanakan proses permintaan konten, memastikan konsistensi brand, dan mempercepat distribusi aset untuk seluruh kebutuhan akademik dan promosi Fakultas Informatika.
                     </p>
-                    <Link href="/request-form" className="inline-block bg-[#800000] text-white px-8 py-3 rounded-md font-semibold hover:bg-red-900 transition shadow-lg">
-                        Request Sekarang
+                    <Link href="/my-requests" className="inline-block bg-[#800000] text-white px-8 py-3 rounded-md font-semibold hover:bg-red-900 transition shadow-lg">
+                        Dashboard Request
                     </Link>
                 </div>
             </section>
@@ -254,6 +270,7 @@ export default function Homepage() {
                         <div className="flex flex-col space-y-4">
                             <span className="font-semibold text-[#8B0000]">Layanan</span>
                             <Link href="/request-form" className="text-gray-600 hover:text-red-800">Request Konten</Link>
+                            <Link href="/my-requests" className="text-gray-600 hover:text-red-800">Daftar Request Saya</Link>
                             <a href="#contact" className="text-gray-600 hover:text-red-800">Hubungi Kami</a>
                         </div>
                     </div>
