@@ -63,6 +63,12 @@ class AdminController extends Controller
         return redirect()->route('admin.asset')->with('success', 'Tautan baru berhasil ditambahkan');
     }
 
+    public function destroyTemplate($id)
+    {
+        \App\Models\Template::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Link berhasil dihapus');
+    }
+
     public function assignPIC(Request $request, $id)
     {
         $request->validate([

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getInitials } from "../../utils";
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 
 export default function Asset({ auth, flash, templatesData = [], kontenData = [] }) {
+    const [deleteId, setDeleteId] = useState(null);
+
     // --- DATA DUMMY MANAJEMEN TEMPLATE ---
     
 
@@ -136,7 +138,7 @@ export default function Asset({ auth, flash, templatesData = [], kontenData = []
                                     </Link>
 
                                     {/* tombol dan ikon delete */}
-                                    <button className="text-[#991B1B] hover:text-[#570000] p-1.5 hover:bg-red-50 rounded-md transition">
+                                    <button onClick={() => setDeleteId(item.id)} className="text-[#991B1B] hover:text-[#570000] p-1.5 hover:bg-red-50 rounded-md transition">
                                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                         </svg>
@@ -186,6 +188,27 @@ export default function Asset({ auth, flash, templatesData = [], kontenData = []
 
                 </main>
             </div>
+
+            {/* Modal Konfirmasi Hapus */}
+            {deleteId && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
+                    <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm border border-gray-100 transform transition-all scale-100 opacity-100">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                                <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900">Hapus Link?</h3>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-6 pl-13">Apakah anda yakin ingin menghapus link ini? Tindakan ini tidak dapat dibatalkan.</p>
+                        <div className="flex justify-end gap-3">
+                            <button onClick={() => setDeleteId(null)} className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 transition">Tidak</button>
+                            <button onClick={() => { router.delete(`/admin/template/${deleteId}`); setDeleteId(null); }} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 shadow-sm transition">Ya, Hapus</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

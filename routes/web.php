@@ -61,6 +61,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/edit-template/{id}', [\App\Http\Controllers\AdminController::class, 'editTemplate'])->name('admin.edit-template');
     Route::put('/template/{id}', [\App\Http\Controllers\AdminController::class, 'updateTemplate'])->name('admin.template.update');
+    Route::delete('/template/{id}', [\App\Http\Controllers\AdminController::class, 'destroyTemplate'])->name('admin.template.destroy');
     Route::post('/template', [\App\Http\Controllers\AdminController::class, 'storeTemplate'])->name('admin.template.store');
 
     Route::post('/request/{id}/assign', [\App\Http\Controllers\AdminController::class, 'assignPIC']);

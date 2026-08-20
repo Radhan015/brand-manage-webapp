@@ -131,10 +131,10 @@ export default function Dashboard({ requests = [], coverages = [] }) {
                     {/* buat header nya */}
                     <div className="mb-10">
                         <h1 className="text-4xl font-bold mb-3 tracking-tight">
-                            Selamat pagi, <span className="text-[#570000]">Admin.</span>
+                            Selamat {(() => { const h = new Date().getHours(); return h < 11 ? 'pagi' : h < 15 ? 'siang' : h < 18 ? 'sore' : 'malam'; })()}, <span className="text-[#570000]">Admin.</span>
                         </h1>
                         <p className="text-[#5A413D] text-[15px] leading-relaxed max-w-2xl">
-                            Berikut adalah ringkasan aktivitas aset brand harian Anda. Anda memiliki <span className="font-bold text-[#1A1C1D]">{requests.filter(r => r.status === 'new_request' || r.status === 'in_progress').length} permintaan aktif</span> yang memerlukan perhatian Anda.
+                            Berikut adalah ringkasan aktivitas aset brand harian Anda. Anda memiliki <span className="font-bold text-[#1A1C1D]">{requests.filter(r => r.status === 'new_request' || r.status === 'in_progress').length} permintaan aktif</span> yang memerlukan perhatian Admin nich :D
                         </p>
                     </div>
 
@@ -165,10 +165,6 @@ export default function Dashboard({ requests = [], coverages = [] }) {
                     <span className="flex items-center gap-1.5">
                         <svg className="w-3.5 h-3.5 text-[#5A413D]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm1-13h-2v6l5.25 3.15.75-1.23-4-2.37V7z" /></svg>
                         {item.time || "-"}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                        <svg className="w-3.5 h-3.5 text-[#5A413D]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.589 2 4 5.589 4 10c0 5.281 7.234 11.516 7.613 11.84.113.097.256.16.4.16s.287-.063.4-.16C12.766 21.516 20 15.281 20 10c0-4.411-3.589-8-8-8zm0 11c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3-1.346 3-3 3z" /></svg>
-                        {item.location || "-"}
                     </span>
                 </div>
             </div>
@@ -202,34 +198,40 @@ export default function Dashboard({ requests = [], coverages = [] }) {
                                 <div className="flex justify-between items-start mb-4">
                                     <h3 className="text-xs font-bold text-[#5A413D] uppercase tracking-wider">Permintaan Aktif</h3>
                                     {/* ini ikon permintaan aktif*/}
-                                    <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" /></svg>
+                                    <svg className="w-5 h-5 text-[#5A413D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" /></svg>
                                 </div>
-                                <div className="flex items-baseline gap-2 mb-6">
-                                    <span className="text-5xl font-black text-gray-900">{requests.filter(r => r.status === 'new_request' || r.status === 'in_progress').length}</span>
-                                    <span className="text-sm font-semibold text-red-500">Perlu Tindakan</span>
-                                </div>
-                                <div className="flex gap-1 h-1.5 w-full">
-                                    <div className="w-1/3 bg-[#BA1A1A] rounded-l-full"></div>
-                                    <div className="w-1/3 bg-[#BA1A1A]"></div>
-                                    <div className="w-1/3 bg-gray-200 rounded-r-full"></div>
-                                </div>
+                                {(() => {
+                                    const count = requests.filter(r => r.status === 'new_request' || r.status === 'in_progress').length;
+                                    const tColor = count < 10 ? 'text-[#2a5c2d]' : count < 20 ? 'text-[#b8860b]' : 'text-[#BA1A1A]';
+                                    const bColor = count < 10 ? 'bg-[#2a5c2d]' : count < 20 ? 'bg-[#b8860b]' : 'bg-[#BA1A1A]';
+                                    return (
+                                        <>
+                                            <div className="flex items-baseline gap-2 mb-6">
+                                                <span className="text-5xl font-black text-gray-900">{count}</span>
+                                                <span className={`text-sm font-semibold ${tColor}`}>Perlu Tindakan</span>
+                                            </div>
+                                            <div className="flex gap-1 h-1.5 w-full">
+                                                <div className={`w-1/3 ${bColor} rounded-l-full`}></div>
+                                                <div className={`w-1/3 ${count >= 10 ? bColor : 'bg-gray-200'}`}></div>
+                                                <div className={`w-1/3 ${count >= 20 ? bColor : 'bg-gray-200'} rounded-r-full`}></div>
+                                            </div>
+                                        </>
+                                    );
+                                })()}
                             </div>
 
                             {/* card tenggat waktu dari konten*/}
                             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
                                 <div>
                                     <div className="flex justify-between items-start mb-4">
-                                        <h3 className="text-xs font-bold text-[#5A413D] uppercase tracking-wider">Tenggat Waktu Mendatang</h3>
+                                        <h3 className="text-xs font-bold text-[#5A413D] uppercase tracking-wider">Sedang Dikerjakan</h3>
                                         {/* ini ikon tnggat*/}
-                                        <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        <svg className="w-5 h-5 text-[#5A413D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                     </div>
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-5xl font-black text-gray-900">{requests.filter(r => r.status === 'in_progress').length}</span>
-                                        <span className="text-sm font-semibold text-gray-500">Next 7 days</span>
+                                        <span className="text-sm font-semibold text-[#5A413D]">Proses Berjalan</span>
                                     </div>
-                                </div>
-                                <div className="flex justify-between text-xs text-gray-400 mt-6 border-t border-gray-100 pt-3">
-                                    <span>Mon</span><span>Wed</span><span>Fri</span>
                                 </div>
                             </div>
                         </div>
@@ -256,12 +258,6 @@ export default function Dashboard({ requests = [], coverages = [] }) {
             <div className="w-px bg-[#E2BFB9] my-4"></div>
             <div className="p-4 pl-5 flex-1 flex flex-col justify-center py-5">
                 <h3 className="font-bold text-gray-900 mb-2 text-[15px]">{item.event_name}</h3>
-                <div className="space-y-2 mb-3">
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                        <div className="w-3.5 h-3.5 rounded-full border border-[#D4A3A3]"></div>
-                        <span>{item.project_type || "Tugas"}</span>
-                    </div>
-                </div>
                 <div className="flex items-center gap-2 mt-auto">
                     <span className="px-2.5 py-1 rounded bg-[#F8F9FA] text-[10px] font-bold text-gray-600 border border-gray-200">
                         PIC: {item.content?.pic?.name || item.pic?.name || auth?.user?.name || "Admin"}
