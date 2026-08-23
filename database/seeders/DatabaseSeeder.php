@@ -36,16 +36,5 @@ class DatabaseSeeder extends Seeder
                 'phone_number' => '089876543210',
             ]
         );
-        
-        // PIC / Staf Desain
-        User::updateOrCreate(
-            ['email' => 'pic@simaco.com'],
-            [
-                'name' => 'Staf Desain PIC',
-                'password_hash' => bcrypt('pic123'),
-                'role' => 'staff', // Asumsikan role staff/PIC
-                'phone_number' => '082222222222',
-            ]
-        );
     }
 }
