@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('coverages', function (Blueprint $table) {
             $table->time('time')->nullable();
-            $table->foreignId('pic_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('pic_id')->nullable()->constrained('users_simaco')->nullOnDelete();
         });
     }
 

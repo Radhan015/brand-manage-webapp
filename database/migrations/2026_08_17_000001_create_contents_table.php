@@ -22,7 +22,7 @@ return new class extends Migration
             
             $table->foreign('request_id')->references('id')->on('requests')->onDelete('cascade');
             // Assuming users table is the standard name
-            $table->foreign('pic_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('pic_id')->references('id')->on('users_simaco')->onDelete('set null');
         });
     }
 
