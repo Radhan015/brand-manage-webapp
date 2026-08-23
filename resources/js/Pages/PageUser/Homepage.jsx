@@ -115,7 +115,7 @@ export default function Homepage({ auth }) {
                         Fakultas Informatika
                     </h1>
                     <p className="text-[#5A413D] mb-8 text-lg leading-relaxed max-w-xl">
-                        SIMACO menyederhanakan proses permintaan konten, memastikan konsistensi brand, dan mempercepat distribusi aset untuk seluruh kebutuhan akademik dan promosi Fakultas Informatika.
+                        SIMACO memudahkan proses permintaan konten, menjaga desain tetap seragam, dan mempercepat pembagian aset promosi di Fakultas Informatika.
                     </p>
                     <Link href="/my-requests" className="inline-block bg-[#800000] text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-900 transition shadow-lg text-lg">
                         Dashboard Request
@@ -128,7 +128,7 @@ export default function Homepage({ auth }) {
                 <h2 className="text-4xl font-bold mb-1 text-gray-900">Tentang SIMACO</h2>
                 <div className="w-12 h-1 bg-[#800000] mx-auto mb-8"></div>
                 <p className="max-w-4xl mx-auto text-[#5A413D] text-[17px] leading-relaxed mb-16">
-                    Sistem Manajemen Content (SIMACO) adalah platform khusus yang dirancang untuk tim branding Fakultas Informatika Universitas Telkom. Kami menyediakan infrastruktur terpusat untuk mengelola permintaan konten kreatif, mendistribusikan aset desain, dan menyediakan template standar yang memastikan setiap komunikasi visual fakultas tetap konsisten, profesional, dan efektif.
+                    Sistem Manajemen Content (SIMACO) adalah platform untuk tim branding Fakultas Informatika Universitas Telkom. Kami mengelola permintaan konten kreatif, membagikan aset desain, dan menyediakan template standar agar komunikasi visual fakultas tetap seragam.
                 </p>
 
                 {/* logo-logo di tentang */}
@@ -165,7 +165,7 @@ export default function Homepage({ auth }) {
                         </div>
                         <h3 className="text-xl font-bold mb-3 text-gray-900">Konsistensi Brand</h3>
                         <p className="text-gray-600 text-sm leading-relaxed">
-                            Memastikan setiap materi konten mengikuti pedoman visual universitas yang ketat, menjaga integritas dan citra profesional fakultas.
+                            Materi konten selalu mengikuti pedoman visual universitas agar desain tetap seragam.
                         </p>
                     </div>
                     {/* Card efisiensi kerja */}
@@ -182,7 +182,7 @@ export default function Homepage({ auth }) {
                         </div>
                         <h3 className="text-xl font-bold mb-3 text-gray-900">Efisiensi Kerja</h3>
                         <p className="text-gray-600 text-sm leading-relaxed">
-                            Alur kerja digital yang mempercepat proses pengajuan permintaan, revisi, hingga pengiriman aset akhir kepada pemohon.
+                            Alur pengajuan permintaan, revisi, hingga pengiriman aset ke pemohon menjadi lebih cepat.
                         </p>
                     </div>
                     {/* Card akses mudah */}
@@ -197,7 +197,7 @@ export default function Homepage({ auth }) {
                         </div>
                         <h3 className="text-xl font-bold mb-3 text-gray-900">Akses Mudah</h3>
                         <p className="text-[#5A413D] text-sm leading-relaxed">
-                            Repositori aset terpusat berbasis tautan yang memungkinkan staf dan dosen mengunduh materi promosi kapan saja dengan mudah.
+                            Staf dan dosen dapat mengunduh materi promosi kapan saja melalui repositori tautan.
                         </p>
                     </div>
                 </div>
@@ -208,7 +208,7 @@ export default function Homepage({ auth }) {
                 <div className="md:w-5/12 md:pl-20 lg:pl-32">
                     <h2 className="text-4xl font-bold mb-4 text-gray-900">Branding Team</h2>
                     <p className="text-[#5A413D] leading-relaxed text-xl max-w-md">
-                        Profesional di balik manajemen brand Fakultas Informatika. Yang berdedikasi dalam membangun, mengelola, dan memperkuat identitas serta citra digital Fakultas Informatika.
+                        Tim di balik manajemen brand Fakultas Informatika yang mengurus desain, aset digital, dan liputan acara fakultas.
                     </p>
                 </div>
                 <div className="md:w-7/12 relative flex justify-center items-end mt-12 md:mt-0">
@@ -228,7 +228,7 @@ export default function Homepage({ auth }) {
                 <div className="relative z-10 text-gray-900 max-w-2xl mx-auto">
                     <h2 className="text-3xl font-bold mb-4">Request Liputan mu Sekarang!</h2>
                     <p className="mb-8 text-[#5A413D]">
-                        SIMACO menyederhanakan proses permintaan konten, memastikan konsistensi brand, dan mempercepat distribusi aset untuk seluruh kebutuhan akademik dan promosi Fakultas Informatika.
+                        SIMACO memudahkan proses permintaan konten, menjaga desain tetap seragam, dan mempercepat pembagian aset promosi di Fakultas Informatika.
                     </p>
                     <Link href="/my-requests" className="inline-block bg-[#800000] text-white px-8 py-3 rounded-md font-semibold hover:bg-red-900 transition shadow-lg">
                         Dashboard Request

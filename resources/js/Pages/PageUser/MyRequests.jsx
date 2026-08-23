@@ -74,16 +74,21 @@ export default function MyRequests({ requests }) {
                                             </td>
                                             <td className="py-5 px-6">
                                                 <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-bold ${
-                                                    req.status === 'Completed' ? 'bg-green-50 text-green-700 border border-green-100' :
-                                                    req.status === 'Rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
-                                                    'bg-blue-50 text-blue-700 border border-blue-100'
+                                                    req.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                    req.status === 'rejected' ? 'bg-red-50 text-red-700' :
+                                                    req.status === 'new_request' ? 'bg-red-100 text-red-800' :
+                                                    'bg-blue-100 text-blue-800'
                                                 }`}>
                                                     <span className={`w-1.5 h-1.5 rounded-full ${
-                                                        req.status === 'Completed' ? 'bg-green-500' :
-                                                        req.status === 'Rejected' ? 'bg-red-500' :
+                                                        req.status === 'completed' ? 'bg-green-500' :
+                                                        req.status === 'rejected' ? 'bg-red-500' :
+                                                        req.status === 'new_request' ? 'bg-red-500' :
                                                         'bg-blue-500'
                                                     }`}></span>
-                                                    {req.status === 'new_request' ? 'Menunggu Peninjauan' : req.status}
+                                                    {req.status === 'new_request' ? 'Baru' : 
+                                                     req.status === 'in_progress' ? 'Berjalan' : 
+                                                     req.status === 'completed' ? 'Selesai' : 
+                                                     req.status === 'rejected' ? 'Ditolak' : req.status}
                                                 </span>
                                             </td>
                                             <td className="py-5 px-6 text-right">

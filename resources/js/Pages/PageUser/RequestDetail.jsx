@@ -35,16 +35,21 @@ export default function RequestDetail({ req }) {
                             <h1 className="text-3xl font-bold text-gray-900">{req.event_name}</h1>
                         </div>
                         <span className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold ${
-                            req.status === 'Completed' ? 'bg-green-50 text-green-700 border border-green-100' :
-                            req.status === 'Rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
-                            'bg-blue-50 text-blue-700 border border-blue-100'
+                            req.status === 'completed' ? 'bg-green-100 text-green-800' :
+                            req.status === 'rejected' ? 'bg-red-50 text-red-700' :
+                            req.status === 'new_request' ? 'bg-red-100 text-red-800' :
+                            'bg-blue-100 text-blue-800'
                         }`}>
                             <span className={`w-2 h-2 rounded-full ${
-                                req.status === 'Completed' ? 'bg-green-500' :
-                                req.status === 'Rejected' ? 'bg-red-500' :
+                                req.status === 'completed' ? 'bg-green-500' :
+                                req.status === 'rejected' ? 'bg-red-500' :
+                                req.status === 'new_request' ? 'bg-red-500' :
                                 'bg-blue-500'
                             }`}></span>
-                            {req.status === 'new_request' ? 'Menunggu Peninjauan' : req.status}
+                            {req.status === 'new_request' ? 'Baru' : 
+                             req.status === 'in_progress' ? 'Berjalan' : 
+                             req.status === 'completed' ? 'Selesai' : 
+                             req.status === 'rejected' ? 'Ditolak' : req.status}
                         </span>
                     </div>
 
@@ -64,7 +69,7 @@ export default function RequestDetail({ req }) {
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">TEMA / KATEGORI KONTEN</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">NAMA SERIAL KONTEN</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
                                     {req.theme_category_group || '-'}
                                 </p>
@@ -101,6 +106,20 @@ export default function RequestDetail({ req }) {
                                 <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">CATATAN TAMBAHAN</h3>
                                 <div className="bg-[#F8F9FA] p-5 rounded-lg text-[15px] text-gray-800 leading-relaxed border border-gray-100 whitespace-pre-wrap">
                                     {userNotes}
+                                </div>
+                            </div>
+                        )}
+
+                        {req.status === 'completed' && req.content?.output_url && (
+                            <div>
+                                <h3 className="text-[12px] font-bold text-green-700 uppercase tracking-wider mb-3">TAUTAN HASIL / OUTPUT PEKERJAAN</h3>
+                                <div className="bg-green-50 border border-green-100 rounded-lg p-4 flex items-center gap-3">
+                                    <svg className="w-6 h-6 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                    </svg>
+                                    <a href={req.content.output_url} target="_blank" rel="noreferrer" className="text-green-700 font-bold hover:underline truncate">
+                                        {req.content.output_url}
+                                    </a>
                                 </div>
                             </div>
                         )}

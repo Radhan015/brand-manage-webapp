@@ -12,6 +12,7 @@ export default function DetailPermintaan({ requestData, users }) {
 
     const [showAssignModal, setShowAssignModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [showRejectModal, setShowRejectModal] = useState(false);
     const [outputUrl, setOutputUrl] = useState("");
 
     const { data, setData, post, processing } = useForm({
@@ -172,8 +173,8 @@ export default function DetailPermintaan({ requestData, users }) {
                                     <p className="text-[16px] text-gray-800 font-medium">{formatDateId(requestData?.event_start_date)}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">LOKASI ACARA</h3>
-                                    <p className="text-[16px] text-gray-800 font-medium">{requestData?.location || "-"}</p>
+                                    <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">NAMA SERIAL KONTEN</h3>
+                                    <p className="text-[16px] text-gray-800 font-medium">{requestData?.theme_category_group || "-"}</p>
                                 </div>
                                 <div>
                                     <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">TIPE KONTEN</h3>
@@ -225,26 +226,27 @@ export default function DetailPermintaan({ requestData, users }) {
                                 <div className="bg-[#EBEBEB] rounded-xl p-6 md:p-8">
                                     <h2 className="text-[24px] font-bold text-[#1A1C1D] mb-2">Tindakan Admin</h2>
                                     <p className="text-[#5A413D] text-[16px] mb-6">
-                                        Silakan tinjau detail permintaan di atas. Anda dapat menyetujui, menolak, atau menugaskan pekerjaan ini kepada staf desain terkait.
+                                        {requestData?.status === "new_request" 
+                                            ? "Silakan tinjau detail permintaan di atas. Anda dapat menyetujui, menolak, atau menugaskan pekerjaan ini kepada staf desain terkait."
+                                            : "Pekerjaan sedang diproses. Jika sudah selesai, silakan masukkan URL hasil pekerjaan (Drive/Link) di bawah ini lalu tandai sebagai selesai."}
                                     </p>
                                     
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        {/* button buat acc */}
                                         
                                         {/* button buat acc / Tandai Selesai */}
                                         {requestData?.status === "in_progress" && (
-                                            <div className="flex flex-col sm:flex-row items-center gap-3 w-full mt-4">
+                                            <div className="col-span-1 md:col-span-3 flex flex-col sm:flex-row items-center gap-3 w-full">
                                                 <input
                                                     type="url"
                                                     placeholder="Masukkan URL Output (Drive/Link)"
                                                     value={outputUrl}
                                                     onChange={(e) => setOutputUrl(e.target.value)}
-                                                    className="border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-[#570000] focus:border-[#570000] w-full sm:w-64"
+                                                    className="border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-[#570000] focus:border-[#570000] w-full flex-1"
                                                 />
                                                 <button
                                                     onClick={() => setShowConfirmModal(true)}
                                                     disabled={!outputUrl}
-                                                    className="bg-[#570000] hover:bg-[#400000] text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-sm disabled:opacity-50 min-h-[44px] w-full sm:w-auto"
+                                                    className="bg-[#570000] hover:bg-[#400000] text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition shadow-sm disabled:opacity-50 min-h-[44px] w-full sm:w-auto shrink-0"
                                                 >
                                                     Tandai Selesai
                                                 </button>
@@ -253,11 +255,7 @@ export default function DetailPermintaan({ requestData, users }) {
                                         {requestData?.status === "new_request" && (
                                             <div className="col-span-1 md:col-span-3 grid grid-cols-2 gap-4 w-full">
                                                 <button 
-                                                    onClick={() => {
-                                                        if(window.confirm("Tolak permintaan ini?")) {
-                                                            router.post(`/admin/request/${requestData?.id}/status`, { status: "rejected" });
-                                                        }
-                                                    }}
+                                                    onClick={() => setShowRejectModal(true)}
                                                     className="border border-red-600 text-red-600 hover:bg-red-50 px-4 py-3 rounded-lg text-sm font-semibold transition flex flex-col items-center justify-center gap-1.5 shadow-sm min-h-[70px] w-full"
                                                 >
                                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -331,6 +329,34 @@ export default function DetailPermintaan({ requestData, users }) {
                             <div className="flex flex-col gap-3">
                                 <button onClick={handleComplete} className="w-full bg-[#570000] hover:bg-[#400000] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition">Ya, Selesaikan</button>
                                 <button onClick={() => setShowConfirmModal(false)} className="w-full text-gray-600 hover:bg-gray-100 px-4 py-2.5 rounded-lg text-sm font-semibold transition">Batal</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showRejectModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-fade-in-up">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">Tolak Permintaan?</h3>
+                            <p className="text-sm text-gray-500 mb-6">Permintaan ini akan ditolak dan dikembalikan ke pemohon.</p>
+                            <div className="flex flex-col gap-3">
+                                <button 
+                                    onClick={() => {
+                                        setShowRejectModal(false);
+                                        router.post(`/admin/request/${requestData?.id}/status`, { status: "rejected" });
+                                    }} 
+                                    className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition"
+                                >
+                                    Ya, Tolak
+                                </button>
+                                <button onClick={() => setShowRejectModal(false)} className="w-full text-gray-600 hover:bg-gray-100 px-4 py-2.5 rounded-lg text-sm font-semibold transition">Batal</button>
                             </div>
                         </div>
                     </div>

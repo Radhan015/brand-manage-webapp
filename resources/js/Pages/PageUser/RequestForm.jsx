@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 export default function RequestForm({ auth, flash }) {
@@ -13,8 +14,16 @@ export default function RequestForm({ auth, flash }) {
         additional_notes: '',
     });
 
-    const submit = (e) => {
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+    const handleFormSubmit = (e) => {
         e.preventDefault();
+        setShowConfirmModal(true);
+    };
+
+    const confirmSubmit = () => {
+        setShowConfirmModal(false);
         transform((currentData) => {
             let extraNotes = '';
             if (currentData.durasi_acara_start || currentData.durasi_acara_end) {
@@ -29,7 +38,10 @@ export default function RequestForm({ auth, flash }) {
             };
         });
         post('/request-form', {
-            onSuccess: () => reset(), // Reset form on success
+            onSuccess: () => {
+                reset();
+                setShowSuccessModal(true);
+            },
         });
     };
 
@@ -66,7 +78,7 @@ export default function RequestForm({ auth, flash }) {
                             <span className="font-medium">{flash.success}</span>
                         </div>
                     )}
-                    <form onSubmit={submit}>
+                    <form onSubmit={handleFormSubmit}>
                         {/* ini Request form nya */}
                         <div className="mb-10">
                             <h2 className="text-xl font-bold text-[#291714] mb-1">Request Form</h2>
@@ -304,6 +316,47 @@ export default function RequestForm({ auth, flash }) {
                     </div>
                 </div>
             </footer>
+
+            {/* Modal Konfirmasi */}
+            {showConfirmModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-fade-in-up">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">Yakin Submit Data?</h3>
+                            <p className="text-sm text-gray-500 mb-6">Pastikan semua data yang dimasukkan sudah benar sebelum mengirim.</p>
+                            <div className="flex flex-col gap-3">
+                                <button onClick={confirmSubmit} className="w-full bg-[#570000] hover:bg-[#400000] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition">Ya, Submit</button>
+                                <button onClick={() => setShowConfirmModal(false)} className="w-full text-gray-600 hover:bg-gray-100 px-4 py-2.5 rounded-lg text-sm font-semibold transition">Batal</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal Sukses */}
+            {showSuccessModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-fade-in-up">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">Berhasil!</h3>
+                            <p className="text-sm text-gray-500 mb-6">Data permintaan berhasil dimasukkan.</p>
+                            <div className="flex flex-col gap-3">
+                                <button onClick={() => window.location.href = '/my-requests'} className="w-full bg-[#570000] hover:bg-[#400000] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition">Menuju Dashboard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
