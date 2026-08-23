@@ -15,11 +15,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Admin
+        User::updateOrCreate(
+            ['email' => 'admin@simaco.com'],
+            [
+                'name' => 'Admin Branding',
+                'password_hash' => bcrypt('admin123'),
+                'role' => 'admin',
+                'phone_number' => '081234567890',
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Regular User / Pemohon
+        User::updateOrCreate(
+            ['email' => 'user@telkomuniversity.ac.id'],
+            [
+                'name' => 'Mahasiswa / Dosen',
+                'password_hash' => bcrypt('user123'),
+                'role' => 'user',
+                'phone_number' => '089876543210',
+            ]
+        );
+        
+        // PIC / Staf Desain
+        User::updateOrCreate(
+            ['email' => 'pic@simaco.com'],
+            [
+                'name' => 'Staf Desain PIC',
+                'password_hash' => bcrypt('pic123'),
+                'role' => 'staff', // Asumsikan role staff/PIC
+                'phone_number' => '082222222222',
+            ]
+        );
     }
 }
