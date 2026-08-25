@@ -46,6 +46,70 @@ export default function Homepage() {
         { id: 'contact', label: 'Contact Us' },
     ];
 
+    // State untuk mengontrol slide yang sedang aktif
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    // Data Carousel Tim Branding beserta posisi labelnya
+    const teamSlides = [
+        {
+            id: 1,
+            image: "/images/Homepage/team-slide-1.png", // Ganti dengan nama file gambar slide 1
+            heightClass: "h-[150%] sm:h-[120%] md:h-[125%] lg:h-[130%]",
+            labels: [
+                { name: "Mochamad Febry Aridlo", role: "Sekpim FIF (Mentor Lapangan)", top: "70%", left: "25%" },
+                { name: "Irma Palupi", role: "Kaur Sekpim FIF (Pembimbing)", top: "75%", left: "75%" }
+            ]
+        },
+        {
+            id: 2,
+            image: "/images/Homepage/team-slide-2.png",
+            // Tambahkan ini khusus untuk Slide 2 agar lebih pendek dan kepalanya aman!
+            heightClass: "h-[115%] sm:h-[120%] md:h-[125%] lg:h-[115%]",
+            labels: [
+                { name: "Ken Diva", role: "Koordinator Analytics", top: "75%", left: "20%" },
+                { name: "Muhamad Harsya Sadin", role: "Koordinator Social Media", top: "85%", left: "50%" },
+                { name: "Yeyen Hamidah", role: "PIC Branding Fakultas FIF", top: "70%", left: "80%" }
+            ]
+        },
+        {
+            id: 3,
+            image: "/images/Homepage/team-slide-3.png",
+            heightClass: "h-[150%] sm:h-[140%] md:h-[160%] lg:h-[160%]",
+            labels: [
+                { name: "Hasanul Fikri", role: "UI/UX Design Website", top: "82%", left: "30%" },
+                { name: "M Naufal Ramadhan", role: "UI/UX Design Website", top: "70%", left: "70%" }
+            ]
+        },
+        {
+            id: 4,
+            image: "/images/Homepage/team-slide-4.png",
+            heightClass: "h-[200%] sm:h-[140%] md:h-[160%] lg:h-[180%]",
+            // Tambahkan baris ini untuk menarik gambarnya lebih ke bawah
+            bottomClass: "-bottom-20 md:-bottom-24 lg:-bottom-20",
+            labels: [
+                { name: "Novel Shiffa Octaviani", role: "Data Analytics", top: "75%", left: "35%" },
+                { name: "Moh Fadly Ahmad Sehabudin", role: "Data Analytics", top: "80%", left: "75%" }
+            ]
+        },
+        {
+            id: 5,
+            image: "/images/Homepage/team-slide-5.png",
+            heightClass: "h-[200%] sm:h-[140%] md:h-[160%] lg:h-[190%]",
+            labels: [
+                { name: "Irvan Tegar Yunadi", role: "Media & Creative", top: "70%", left: "35%" },
+                { name: "Bagus Hardiyanto", role: "Media & Creative", top: "60%", left: "65%" }
+            ]
+        }
+    ];
+
+    // Effect untuk Auto-Play Carousel (berpindah setiap 4 detik)
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prevSlide) => (prevSlide + 1) % teamSlides.length);
+        }, 4000);
+        return () => clearInterval(timer);
+    }, []);
+
     return (
         <div className="min-h-screen bg-white font-sans text-gray-800 overflow-x-hidden">
             <Head title="Beranda | SIMACO" />
@@ -67,8 +131,8 @@ export default function Homepage() {
                             href={`#${link.id}`}
                             onClick={(e) => scrollToSection(e, link.id)}
                             className={`transition pb-1 ${activeSection === link.id
-                                    ? 'text-red-800 border-b-2 border-red-800'
-                                    : 'hover:text-red-800'
+                                ? 'text-red-800 border-b-2 border-red-800'
+                                : 'hover:text-red-800'
                                 }`}
                         >
                             {link.label}
@@ -137,13 +201,13 @@ export default function Homepage() {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    {/* Card konsistensi brand*/}
+                    {/* card konsistensi brand*/}
                     <div className="border border-red-200 bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition">
                         <div className="w-12 h-12 bg-red-100 text-[#800000] flex items-center justify-center rounded-xl mb-6">
                             <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
                                 {/* Kotak merah*/}
                                 <rect x="3" y="5" width="18" height="14" rx="3" />
-                                {/* Kotak satunya yg didalam :)*/}
+                                {/* kotak satunya yg didalam :)*/}
                                 <rect x="12" y="10.5" width="7" height="6" fill="#fee2e2" />
                             </svg>
                         </div>
@@ -187,17 +251,56 @@ export default function Homepage() {
                 </div>
             </section>
 
-            {/* bagian TEAM */}
-            <section id="team" className="py-20 px-8 md:px-16 bg-white flex flex-col md:flex-row items-center gap-12 overflow-hidden">
-                <div className="md:w-5/12 md:pl-20 lg:pl-32">
+            {/* bagian TEAM (Carousel Auto-Play) */}
+            <section id="team" className="py-10 md:py-12 px-8 md:px-16 bg-white flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
+                <div className="md:w-5/12 md:pl-20 lg:pl-32 z-20">
                     <h2 className="text-4xl font-bold mb-4 text-gray-900">Branding Team</h2>
-                    <p className="text-[#5A413D] leading-relaxed text-xl max-w-md">
+                    <p className="text-[#5A413D] leading-relaxed text-lg max-w-md">
                         Profesional di balik manajemen brand Fakultas Informatika. Yang berdedikasi dalam membangun, mengelola, dan memperkuat identitas serta citra digital Fakultas Informatika.
                     </p>
+
+                    {/* Navigasi Dot Opsional */}
+                    <div className="flex gap-2 mt-8">
+                        {teamSlides.map((_, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setCurrentSlide(idx)}
+                                className={`h-2.5 rounded-full transition-all duration-5000 ${currentSlide === idx ? 'w-8 bg-[#570000]' : 'w-2.5 bg-gray-300 hover:bg-gray-400'}`}
+                                aria-label={`Go to slide ${idx + 1}`}
+                            />
+                        ))}
+                    </div>
                 </div>
-                <div className="md:w-7/12 relative flex justify-center items-end mt-12 md:mt-0">
-                    {/* Foto Tim */}
-                    <img src="/images/Homepage/branding-team.png" alt="Branding Team" className="w-full max-w-2xl h-auto object-contain drop-shadow-2xl scale-110 origin-bottom" />
+
+                {/* Area Gambar Carousel */}
+                {/* Tinggi container dipertahankan agar background putih tetap pendek */}
+                <div className="md:w-7/12 relative flex justify-center items-end mt-10 md:mt-0 h-[350px] md:h-[400px] w-full z-10">
+                    {teamSlides.map((slide, index) => (
+                        <div
+                            key={slide.id}
+                            className={`absolute inset-0 w-full h-full transition-opacity duration-5000 ease-in-out ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                        >
+                            {/* Gambar Orang */}
+                            <img
+                                src={slide.image}
+                                alt="Tim Branding"
+                                // Logika Dinamis Posisi Bawah: Jika ada bottomClass, pakai itu. Jika tidak, pakai default.
+                                className={`absolute ${slide.bottomClass ? slide.bottomClass : '-bottom-10 md:-bottom-12'} left-1/2 transform -translate-x-1/2 ${slide.heightClass ? slide.heightClass : 'h-[160%] sm:h-[170%] md:h-[185%] lg:h-[150%]'} w-auto max-w-none object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.4)] origin-bottom`}
+                            />
+
+                            {/* Label Nama & Jabatan (Glassmorphism) */}
+                            {slide.labels.map((label, labelIdx) => (
+                                <div
+                                    key={labelIdx}
+                                    style={{ top: label.top, left: label.left }}
+                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 bg-white/85 backdrop-blur-md border-[1.5px] border-gray-800 rounded-md px-4 py-2.5 shadow-[0_4px_15px_rgba(0,0,0,0.1)] min-w-max z-30"
+                                >
+                                    <p className="text-[13px] md:text-[15px] font-bold text-gray-900 leading-tight mb-0.5">{label.name}</p>
+                                    <p className="text-[11px] md:text-[13px] italic text-gray-700 leading-tight">{label.role}</p>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
                 </div>
             </section>
 
