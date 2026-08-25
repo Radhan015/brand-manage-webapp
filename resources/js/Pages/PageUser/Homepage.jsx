@@ -46,14 +46,14 @@ export default function Homepage() {
         { id: 'contact', label: 'Contact Us' },
     ];
 
-    // State untuk mengontrol slide yang sedang aktif
+    // state untuk mengontrol slide yang sedang aktif
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    // Data Carousel Tim Branding beserta posisi labelnya
+    // data untuk carousel tim branding beserta posisi labelnya
     const teamSlides = [
         {
             id: 1,
-            image: "/images/Homepage/team-slide-1.png", // Ganti dengan nama file gambar slide 1
+            image: "/images/Homepage/team-slide-1.png", 
             heightClass: "h-[150%] sm:h-[120%] md:h-[125%] lg:h-[130%]",
             labels: [
                 { name: "Mochamad Febry Aridlo", role: "Sekpim FIF (Mentor Lapangan)", top: "70%", left: "25%" },
@@ -63,7 +63,6 @@ export default function Homepage() {
         {
             id: 2,
             image: "/images/Homepage/team-slide-2.png",
-            // Tambahkan ini khusus untuk Slide 2 agar lebih pendek dan kepalanya aman!
             heightClass: "h-[115%] sm:h-[120%] md:h-[125%] lg:h-[115%]",
             labels: [
                 { name: "Ken Diva", role: "Koordinator Analytics", top: "75%", left: "20%" },
@@ -84,7 +83,6 @@ export default function Homepage() {
             id: 4,
             image: "/images/Homepage/team-slide-4.png",
             heightClass: "h-[200%] sm:h-[140%] md:h-[160%] lg:h-[180%]",
-            // Tambahkan baris ini untuk menarik gambarnya lebih ke bawah
             bottomClass: "-bottom-20 md:-bottom-24 lg:-bottom-20",
             labels: [
                 { name: "Novel Shiffa Octaviani", role: "Data Analytics", top: "75%", left: "35%" },
@@ -102,7 +100,7 @@ export default function Homepage() {
         }
     ];
 
-    // Effect untuk Auto-Play Carousel (berpindah setiap 4 detik)
+    // efek untuk autoplay carousel (berpindah setiap 4 detik) bisa diubah juga kalo emang kecepetan
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentSlide((prevSlide) => (prevSlide + 1) % teamSlides.length);
@@ -148,7 +146,7 @@ export default function Homepage() {
                 </Link>
             </nav>
 
-            {/* ini Bagian Hero */}
+            {/* ini bagian Hero */}
             <section className="relative pt-24 h-screen flex items-center px-8 md:pl-24 lg:pl-32 bg-gray-50"
                 style={{
                     backgroundImage: 'linear-gradient(to right, rgba(255,255,255,1) 40%, rgba(255,255,255,0) 100%), url("/images/Homepage/gambartult.jpg")',
@@ -171,7 +169,7 @@ export default function Homepage() {
                 </div>
             </section>
 
-            {/* Ini About/Tentang */}
+            {/* ini About/Tentang */}
             <section id="tentang" className="py-20 px-8 md:px-16 text-center bg-white">
                 <h2 className="text-4xl font-bold mb-1 text-gray-900">Tentang SIMACO</h2>
                 <div className="w-12 h-1 bg-[#800000] mx-auto mb-8"></div>
@@ -251,7 +249,7 @@ export default function Homepage() {
                 </div>
             </section>
 
-            {/* bagian TEAM (Carousel Auto-Play) */}
+            {/* bagian TEAM */}
             <section id="team" className="py-10 md:py-12 px-8 md:px-16 bg-white flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
                 <div className="md:w-5/12 md:pl-20 lg:pl-32 z-20">
                     <h2 className="text-4xl font-bold mb-4 text-gray-900">Branding Team</h2>
@@ -259,7 +257,7 @@ export default function Homepage() {
                         Profesional di balik manajemen brand Fakultas Informatika. Yang berdedikasi dalam membangun, mengelola, dan memperkuat identitas serta citra digital Fakultas Informatika.
                     </p>
 
-                    {/* Navigasi Dot Opsional */}
+                    {/* navigasi dot */}
                     <div className="flex gap-2 mt-8">
                         {teamSlides.map((_, idx) => (
                             <button
@@ -272,23 +270,21 @@ export default function Homepage() {
                     </div>
                 </div>
 
-                {/* Area Gambar Carousel */}
-                {/* Tinggi container dipertahankan agar background putih tetap pendek */}
+                {/* area gambar carouselnya */}
                 <div className="md:w-7/12 relative flex justify-center items-end mt-10 md:mt-0 h-[350px] md:h-[400px] w-full z-10">
                     {teamSlides.map((slide, index) => (
                         <div
                             key={slide.id}
                             className={`absolute inset-0 w-full h-full transition-opacity duration-5000 ease-in-out ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                         >
-                            {/* Gambar Orang */}
+                            {/* gambar orang */}
                             <img
                                 src={slide.image}
                                 alt="Tim Branding"
-                                // Logika Dinamis Posisi Bawah: Jika ada bottomClass, pakai itu. Jika tidak, pakai default.
                                 className={`absolute ${slide.bottomClass ? slide.bottomClass : '-bottom-10 md:-bottom-12'} left-1/2 transform -translate-x-1/2 ${slide.heightClass ? slide.heightClass : 'h-[160%] sm:h-[170%] md:h-[185%] lg:h-[150%]'} w-auto max-w-none object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.4)] origin-bottom`}
                             />
 
-                            {/* Label Nama & Jabatan (Glassmorphism) */}
+                            {/* label nama & jabatannya*/}
                             {slide.labels.map((label, labelIdx) => (
                                 <div
                                     key={labelIdx}
