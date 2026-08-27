@@ -36,5 +36,35 @@ class DatabaseSeeder extends Seeder
                 'phone_number' => '089876543210',
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'yeyenthamrie@gmail.com'],
+            [
+                'name' => 'Yeyen Hamidah',
+                'password_hash' => bcrypt('Alvin150214!'),
+                'role' => 'admin',
+                'phone_number' => '085711945328',
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'mharsyasadin656@gmail.com'],
+            [
+                'name' => 'Harsya Sadin',
+                'password_hash' => bcrypt('Gehuenak12345.'),
+                'role' => 'admin',
+                'phone_number' => '089603059913',
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'adminFIF@gmail.com'],
+            [
+                'name' => 'Admin FIF',
+                'password_hash' => bcrypt('adminfif123'),
+                'role' => 'admin',
+                'phone_number' => '081234567',
+            ]
+        );
     }
 }

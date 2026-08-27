@@ -16,6 +16,7 @@ export default function RequestForm({ auth, flash }) {
 
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [isOtherProject, setIsOtherProject] = useState(false);
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -115,10 +116,18 @@ export default function RequestForm({ auth, flash }) {
                                 <div>
                                     <label className="block text-sm font-medium text-[#291714] mb-2">Tipe Proyek*</label>
                                     <select
-                                        required
+                                        required={!isOtherProject}
                                         className="w-full px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 bg-white"
-                                        value={data.project_type}
-                                        onChange={e => setData('project_type', e.target.value)}
+                                        value={isOtherProject ? "Lainnya" : data.project_type}
+                                        onChange={e => {
+                                            if (e.target.value === 'Lainnya') {
+                                                setIsOtherProject(true);
+                                                setData('project_type', '');
+                                            } else {
+                                                setIsOtherProject(false);
+                                                setData('project_type', e.target.value);
+                                            }
+                                        }}
                                     >
                                         <option value="" disabled>Pilih tipe proyek...</option>
                                         <option value="Graphic Design">Graphic Design</option>
@@ -126,6 +135,17 @@ export default function RequestForm({ auth, flash }) {
                                         <option value="Photography">Photography</option>
                                         <option value="Lainnya">Lainnya</option>
                                     </select>
+                                    {isOtherProject && (
+                                        <input
+                                            type="text"
+                                            required
+                                            autoFocus
+                                            placeholder="Ketik tipe proyek lainnya..."
+                                            className="w-full mt-3 px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700"
+                                            value={data.project_type}
+                                            onChange={e => setData('project_type', e.target.value)}
+                                        />
+                                    )}
                                     {errors.project_type && <p className="text-red-500 text-xs mt-1">{errors.project_type}</p>}
                                 </div>
 
@@ -226,9 +246,16 @@ export default function RequestForm({ auth, flash }) {
                                     <input
                                         type="date"
                                         required
+                                        min={data.durasi_acara_end ? (() => {
+                                            const d = new Date(data.durasi_acara_end);
+                                            d.setDate(d.getDate() + 3);
+                                            return d.toISOString().split('T')[0];
+                                        })() : undefined}
                                         className="px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#800000] text-gray-700 w-full sm:w-auto"
                                         value={data.event_start_date}
                                         onChange={e => setData('event_start_date', e.target.value)}
+                                        onInvalid={e => e.target.setCustomValidity('Tenggat waktu minimal H+3 setelah acara berakhir.')}
+                                        onInput={e => e.target.setCustomValidity('')}
                                     />
                                     {errors.event_start_date && <p className="text-red-500 text-xs mt-1">{errors.event_start_date}</p>}
                                 </div>

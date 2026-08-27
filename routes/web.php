@@ -16,6 +16,9 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/request-form', function () {
+        if (\Illuminate\Support\Facades\Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
         return Inertia::render('PageUser/RequestForm');
     })->name('request-form');
 

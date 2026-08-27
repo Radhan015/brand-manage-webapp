@@ -10,8 +10,19 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $requests = ContentRequest::with(['user', 'content'])->latest()->get();
-        $coverages = \App\Models\Coverage::with('pic')->orderBy('date', 'asc')->get();
+        $userId = auth()->id();
+        $requests = ContentRequest::with(['user', 'content'])
+            ->whereDoesntHave('content')
+            ->orWhereHas('content', function ($q) use ($userId) {
+                $q->where('pic_id', $userId);
+            })
+            ->latest()->get();
+
+        $coverages = \App\Models\Coverage::with('pic')
+            ->whereNull('pic_id')
+            ->orWhere('pic_id', $userId)
+            ->orderBy('date', 'asc')->get();
+
         return Inertia::render('PageAdmin/Dashboard', [
             'requests' => $requests,
             'coverages' => $coverages
@@ -102,11 +113,15 @@ class AdminController extends Controller
     {
         $request->validate([
             'status' => 'required|string',
-            'output_url' => 'nullable|url'
+            'output_url' => 'nullable|url',
+            'reject_reason' => 'nullable|string'
         ]);
 
         $contentReq = ContentRequest::findOrFail($id);
-        $contentReq->update(['status' => $request->status]);
+        $contentReq->update([
+            'status' => $request->status,
+            'reject_reason' => $request->reject_reason
+        ]);
 
         if ($request->output_url) {
             \App\Models\Content::where('request_id', $id)->update(['output_url' => $request->output_url]);

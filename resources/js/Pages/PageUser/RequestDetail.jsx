@@ -126,17 +126,25 @@ export default function RequestDetail({ req }) {
 
                         {req.assets && req.assets.length > 0 && (
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">TAUTAN MATERI / REFERENSI (GOOGLE DRIVE)</h3>
-                                <ul className="space-y-2">
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">TAUTAN MATERI / REFERENSI</h3>
+                                <div className="space-y-3">
                                     {req.assets.map(asset => (
-                                        <li key={asset.id} className="bg-blue-50 border border-blue-100 rounded-lg p-4 flex items-center gap-3">
-                                            <svg className="w-6 h-6 text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
-                                            <a href={asset.drive_url} target="_blank" rel="noreferrer" className="text-blue-700 font-medium hover:underline truncate">
-                                                {asset.drive_url}
-                                            </a>
-                                        </li>
+                                        <div key={asset.id} className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-[15px] text-gray-800 whitespace-pre-wrap leading-relaxed">
+                                            {asset.drive_url.split(/(\s+)/).map((word, i) => {
+                                                if (word.match(/^https?:\/\//i) || word.match(/^www\./i)) {
+                                                    const href = word.startsWith('http') ? word : `https://${word}`;
+                                                    return (
+                                                        <a key={i} href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-md font-bold hover:bg-blue-200 transition break-all border border-blue-200 mx-0.5">
+                                                            <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                                                            {word}
+                                                        </a>
+                                                    );
+                                                }
+                                                return <span key={i}>{word}</span>;
+                                            })}
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
                             </div>
                         )}
 
@@ -144,6 +152,13 @@ export default function RequestDetail({ req }) {
                             <div className="bg-red-50 border border-red-100 rounded-lg p-5">
                                 <h3 className="text-[12px] font-bold text-red-800 uppercase tracking-wider mb-2">FEEDBACK DARI TIM BRANDING</h3>
                                 <p className="text-[15px] text-red-900 leading-relaxed whitespace-pre-wrap">{req.review_feedback}</p>
+                            </div>
+                        )}
+
+                        {req.status === 'rejected' && req.reject_reason && (
+                            <div className="bg-red-50 border border-red-100 rounded-lg p-5">
+                                <h3 className="text-[12px] font-bold text-red-800 uppercase tracking-wider mb-2">ALASAN PENOLAKAN</h3>
+                                <p className="text-[15px] text-red-900 leading-relaxed whitespace-pre-wrap">{req.reject_reason}</p>
                             </div>
                         )}
                     </div>

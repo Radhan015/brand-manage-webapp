@@ -30,7 +30,9 @@ export default function Login({ status }) {
             <div className="w-full lg:w-[55%] flex flex-col justify-center items-center p-8 sm:p-12">
                 <div className="w-full max-w-[400px]">
                     <div className="mb-10">
-                        <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-20 w-auto object-contain mb-5" />
+                        <Link href="/">
+                            <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-20 w-auto object-contain mb-5 hover:opacity-80 transition" />
+                        </Link>
                         <h2 className="text-[33px] font-bold text-[#1A1C1D] mb-2">Selamat datang</h2>
                         <p className="text-[#5A413D] text-[18px]">Fakultas Informatika, Telkom University</p>
                     </div>
@@ -118,9 +120,15 @@ export default function Login({ status }) {
 
                     {/* footer link nya */}
                     <div className="mt-8 text-center space-y-12">
-                        <p className="text-[15px] text-[#5A413D]">
-                            Belum punya akun? <Link href="/register" className="font-bold text-[#570000] hover:underline">Daftar akun</Link>
-                        </p>
+                        <div className="space-y-3 flex flex-col items-center">
+                            <p className="text-[15px] text-[#5A413D]">
+                                Belum punya akun? <Link href="/register" className="font-bold text-[#570000] hover:underline">Daftar akun</Link>
+                            </p>
+                            <Link href="/" className="inline-flex items-center gap-1.5 text-[15px] font-bold text-gray-500 hover:text-[#570000] transition">
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                                Kembali ke Beranda
+                            </Link>
+                        </div>
 
                         <div className="flex justify-center items-center gap-1.5 text-[#5A413D]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
