@@ -10,4 +10,9 @@ class Content extends Model
         'request_id', 'template_id', 'pic_id', 'content_name', 
         'content_description', 'deadline', 'revision_notes', 'output_url', 'coverage_date'
     ];
+
+    public function pic()
+    {
+        return $this->belongsTo(User::class, 'pic_id');
+    }
 }

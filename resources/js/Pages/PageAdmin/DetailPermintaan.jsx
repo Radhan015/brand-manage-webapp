@@ -12,7 +12,8 @@ export default function DetailPermintaan({ requestData, users }) {
     const userNotes = requestData?.additional_notes 
         ? requestData.additional_notes.split('---')[0].trim() 
         : '';
-
+    const platformMatch = requestData?.additional_notes?.match(/\[Platform Upload: (.*?)\]/);
+    const platformUpload = platformMatch ? platformMatch[1] : "-";
 
     const [showAssignModal, setShowAssignModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -176,7 +177,15 @@ export default function DetailPermintaan({ requestData, users }) {
                                 </div>
                                 <div>
                                     <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">TANGGAL ACARA</h3>
+                                    <p className="text-[16px] text-gray-800 font-medium">{formatDateId(requestData?.event_end_date)}</p>
+                                </div>
+                                <div>
+                                    <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">DEADLINE KONTEN</h3>
                                     <p className="text-[16px] text-gray-800 font-medium">{formatDateId(requestData?.event_start_date)}</p>
+                                </div>
+                                <div>
+                                    <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">PLATFORM</h3>
+                                    <p className="text-[16px] text-gray-800 font-medium">{platformUpload}</p>
                                 </div>
                                 <div>
                                     <h3 className="text-[11px] font-bold text-[#5A413D] uppercase tracking-wider mb-1.5">NAMA SERIAL KONTEN</h3>

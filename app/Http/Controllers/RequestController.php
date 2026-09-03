@@ -61,7 +61,7 @@ class RequestController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        $request = ContentRequest::with('content', 'assets')->where('user_id', Auth::id())->findOrFail($id);
+        $request = ContentRequest::with(['content.pic', 'assets'])->where('user_id', Auth::id())->findOrFail($id);
         return \Inertia\Inertia::render('PageUser/RequestDetail', ['req' => $request]);
     }
 }

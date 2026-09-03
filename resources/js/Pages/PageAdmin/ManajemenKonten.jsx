@@ -154,7 +154,7 @@ export default function ManajemenKonten({ auth, flash, projects = [], users = []
 
                         {/* RENDER LIST PROYEK & TUGAS */}
                         <div className="space-y-4">
-                            {projects.length === 0 ? <div className="p-4 text-sm text-gray-500 text-center bg-white rounded-lg border border-gray-200">Belum ada data</div> : projects.map((project) => (
+                            {projects.filter(p => p.status !== 'completed' && p.status !== 'rejected').length === 0 ? <div className="p-4 text-sm text-gray-500 text-center bg-white rounded-lg border border-gray-200">Belum ada data</div> : projects.filter(p => p.status !== 'completed' && p.status !== 'rejected').map((project) => (
                                 <div key={project.id} className="bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100 overflow-hidden">
                                     <div className="p-6 grid grid-cols-12 gap-6 items-center hover:bg-gray-50 transition group">
                                         <div className="col-span-12 md:col-span-8">

@@ -12,6 +12,7 @@ export default function RequestForm({ auth, flash }) {
         theme_category_group: '',
         drive_url: '',
         additional_notes: '',
+        platform: '',
     });
 
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -32,6 +33,9 @@ export default function RequestForm({ auth, flash }) {
             }
             if (currentData.content_type === 'lebih_dari_sehari' && (currentData.durasi_konten_start || currentData.durasi_konten_end)) {
                 extraNotes += `\n[Durasi Konten: ${currentData.durasi_konten_start || '?'} s/d ${currentData.durasi_konten_end || '?'}]`;
+            }
+            if (currentData.platform) {
+                extraNotes += `\n[Platform Upload: ${currentData.platform}]`;
             }
             return {
                 ...currentData,
@@ -260,8 +264,25 @@ export default function RequestForm({ auth, flash }) {
                                     {errors.event_start_date && <p className="text-red-500 text-xs mt-1">{errors.event_start_date}</p>}
                                 </div>
 
+                                {/* Platform Upload */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[#291714] mb-2">Media terkait*</label>
+                                    <label className="block text-sm font-medium text-[#291714] mb-2">Platform Upload*</label>
+                                    <select
+                                        required
+                                        className="w-full px-4 py-2.5 border border-[#E7BDB6] rounded-md focus:outline-none focus:ring-1 focus:ring-[#8B0000] text-gray-700 bg-white"
+                                        value={data.platform}
+                                        onChange={e => setData('platform', e.target.value)}
+                                    >
+                                        <option value="" disabled>Pilih platform...</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="TikTok">TikTok</option>
+                                        <option value="YouTube">YouTube</option>
+                                    </select>
+                                    {errors.platform && <p className="text-red-500 text-xs mt-1">{errors.platform}</p>}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-[#291714] mb-2">Media terkait/Link Referensi*</label>
 
                                     {/* link inputnya */}
                                     <textarea

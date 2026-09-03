@@ -6,6 +6,9 @@ export default function RequestDetail({ req }) {
     const userNotes = req.additional_notes 
         ? req.additional_notes.split('---')[0].trim() 
         : '';
+    const platformMatch = req.additional_notes?.match(/\[Platform Upload: (.*?)\]/);
+    const platformUpload = platformMatch ? platformMatch[1] : "-";
+
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] font-sans text-gray-800 pb-12">
@@ -74,6 +77,12 @@ export default function RequestDetail({ req }) {
                                     {req.theme_category_group || '-'}
                                 </p>
                             </div>
+                            <div>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">PIC (PENANGGUNG JAWAB)</h3>
+                                <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
+                                    {req.content?.pic?.name || 'Belum Ditugaskan'}
+                                </p>
+                            </div>
                         </div>
 
                         {/* Kanan - Waktu & Tenggat */}
@@ -85,9 +94,15 @@ export default function RequestDetail({ req }) {
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">TENGGAT WAKTU PENGERJAAN</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">DEADLINE KONTEN</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
                                     {req.event_start_date ? new Date(req.event_start_date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">PLATFORM UPLOAD</h3>
+                                <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
+                                    {platformUpload}
                                 </p>
                             </div>
                         </div>
