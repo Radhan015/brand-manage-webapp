@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { useLang, LangSwitch } from "@/i18n";
 import { Head, Link } from '@inertiajs/react';
 
 export default function Login() {
+    const { t } = useLang();
     // state buat pass mata
     const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div className="min-h-screen flex font-sans bg-[#F9F9F9]">
-            <Head title="Log in | SIMACO" />
+            <Head title={`${t("Lupa kata sandi?")} | SIMACO`} />
             {/* gambar kiri  */}
             <div className="hidden lg:flex lg:w-[35%] relative bg-white">
                 <img
@@ -21,31 +23,32 @@ export default function Login() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2c0404] via-transparent to-transparent opacity-90"></div>
                 <div className="relative z-10 flex flex-col justify-end p-12 lg:p-16 w-full h-full text-white">
                     <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 tracking-tight">
-                        Tingkatkan<br />Identitas Institusi
+                        {t("Tingkatkan")}<br />{t("Identitas Institusi")}
                     </h1>
                     <p className="text-[#FFB4A8] text-[19px] max-w-md mb-8 leading-relaxed">
-                        Menyederhanakan distribusi dan konsistensi aset merek untuk Fakultas Informatika.
+                        {t("Menyederhanakan distribusi dan konsistensi aset merek untuk Fakultas Informatika.")}
                     </p>
 
                 </div>
             </div>
 
             {/* form login kanan */}
-            <div className="w-full lg:w-[55%] flex flex-col justify-center items-center p-8 sm:p-12">
+            <div className="relative w-full lg:w-[55%] flex flex-col justify-center items-center p-8 sm:p-12">
+                <LangSwitch className="absolute top-4 right-4" />
                 <div className="w-full max-w-[400px]">
 
                     {/* header formnya */}
                     <div className="mb-5">
-                        <img
+                        <div className="flex items-center gap-4 mb-1"><img
                             src="/images/Homepage/logoSimaco-removebg-preview.png"
                             alt="Logo SiMaCo"
-                            className="h-20 w-auto object-contain mb-1"
-                        />
+                            className="h-14 sm:h-20 w-auto object-contain"
+                        /><img src="/images/Homepage/logo-fakultas-informatika.png" alt="Logo Fakultas Informatika" className="h-9 sm:h-12 w-auto object-contain" /></div>
                         <h2 className="text-[33px] font-bold text-[#1A1C1D] mb-1">
-                            Selamat datang
+                            {t("Selamat datang")}
                         </h2>
                         <p className="text-[#5A413D] text-[18px]">
-                            Fakultas Informatika, Telkom University
+                            {t("Fakultas Informatika, Telkom University")}
                         </p>
                     </div>
 
@@ -55,7 +58,7 @@ export default function Login() {
                         {/* form email ama username */}
                         <div>
                             <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">
-                                Email atau Username
+                                {t("Email atau nama kamu")}
                             </label>
                             <div className="relative flex items-center">
                                 {/* ini ikon user */}
@@ -66,7 +69,7 @@ export default function Login() {
                                 </div>
                                 <input
                                     type="text"
-                                    placeholder="Masukkan email atau username"
+                                    placeholder={t("Masukkan email atau nama")}
                                     className="w-full py-3 pl-11 pr-4 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111] focus:border-[#6B1111] placeholder-gray-400 text-gray-800"
                                 />
                             </div>
@@ -75,7 +78,7 @@ export default function Login() {
                         <div>
                             <div className="flex justify-between items-center mb-1">
                                 <label className="block text-[15px] font-bold text-[#1A1C1D]">
-                                    Kata Sandi Lama
+                                    {t("Kata Sandi Lama")}
                                 </label>
                             </div>
                             <div className="relative flex items-center">
@@ -87,7 +90,7 @@ export default function Login() {
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    placeholder="Password lama"
+                                    placeholder={t("Kata sandi lama")}
                                     className="w-full py-3 pl-11 pr-11 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111] focus:border-[#6B1111] placeholder-gray-400 text-gray-800 tracking-wider"
                                 />
                                 {/* ini buat ikon mata sandi */}
@@ -113,7 +116,7 @@ export default function Login() {
                         <div>
                             <div className="flex justify-between items-center mb-1">
                                 <label className="block text-[15px] font-bold text-[#1A1C1D]">
-                                    Kata Sandi Baru
+                                    {t("Kata Sandi Baru")}
                                 </label>
                             </div>
                             <div className="relative flex items-center">
@@ -125,7 +128,7 @@ export default function Login() {
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    placeholder="Password baru"
+                                    placeholder={t("Kata sandi baru")}
                                     className="w-full py-3 pl-11 pr-11 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111] focus:border-[#6B1111] placeholder-gray-400 text-gray-800 tracking-wider"
                                 />
                                 {/* ini buat ikon mata sandi */}
@@ -152,7 +155,7 @@ export default function Login() {
                             href="/login"
                             className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-[#570000] hover:bg-[#400404] transition duration-200"
                         >
-                            Selesai
+                            {t("Selesai")}
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                             </svg>
@@ -162,15 +165,16 @@ export default function Login() {
                     {/* ini footer linknya */}
                     <div className="mt-5 text-center space-y-12">
                         <p className="text-[15px] text-[#5A413D]">
-                            Sudah punya akun? <Link href="/login" className="font-bold text-[#570000] hover:underline">Masuk </Link>
+                            {t("Sudah punya akun?")} <Link href="/login" className="font-bold text-[#570000] hover:underline">{t("Masuk")}</Link>
                         </p>
 
                         <div className="flex justify-center items-center gap-1.5 text-[#5A413D]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                             </svg>
-                            <span className="text-[13px] tracking-widest font-semibold uppercase text-[#5A413D]">Portal Akademik Aman</span>
+                            <span className="text-[13px] tracking-widest font-semibold uppercase text-[#5A413D]">{t("Portal Akademik Aman")}</span>
                         </div>
+                        <p className="text-xs text-gray-400">Developed by KP Branding Team 2026</p>
                     </div>
 
                 </div>

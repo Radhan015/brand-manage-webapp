@@ -8,6 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('assets')) return; // already exists in hand-built DBs
+
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('request_id');

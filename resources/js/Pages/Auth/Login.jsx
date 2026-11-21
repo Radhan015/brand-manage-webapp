@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { useLang, LangSwitch } from "@/i18n";
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Login({ status }) {
+    const { t } = useLang();
     const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors } = useForm({
         login: '',
         password: '',
-        remember: false,
     });
 
     const submit = (e) => {
@@ -16,32 +17,33 @@ export default function Login({ status }) {
 
     return (
         <div className="min-h-screen flex font-sans bg-[#F9F9F9]">
-            <Head title="Log in | SIMACO" />
+            <Head title={`${t("Masuk")} | SIMACO`} />
             <div className="hidden lg:flex lg:w-[35%] relative bg-white">
                 <img src="/images/Login/TULT.jpg" alt="Telkom University Building" className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-[#4A0B0B] opacity-80 mix-blend-multiply"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2c0404] via-transparent to-transparent opacity-90"></div>
                 <div className="relative z-10 flex flex-col justify-end p-12 lg:p-16 w-full h-full text-white">
-                    <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 tracking-tight">Tingkatkan<br />Identitas Institusi</h1>
-                    <p className="text-[#FFB4A8] text-[19px] max-w-md mb-8 leading-relaxed">Menyederhanakan distribusi dan konsistensi aset merek untuk Fakultas Informatika.</p>
+                    <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 tracking-tight">{t("Tingkatkan")}<br />{t("Identitas Institusi")}</h1>
+                    <p className="text-[#FFB4A8] text-[19px] max-w-md mb-8 leading-relaxed">{t("Menyederhanakan distribusi dan konsistensi aset merek untuk Fakultas Informatika.")}</p>
                 </div>
             </div>
 
-            <div className="w-full lg:w-[55%] flex flex-col justify-center items-center p-8 sm:p-12">
+            <div className="relative w-full lg:w-[55%] flex flex-col justify-center items-center p-8 sm:p-12">
+                <LangSwitch className="absolute top-4 right-4" />
                 <div className="w-full max-w-[400px]">
                     <div className="mb-10">
-                        <Link href="/">
-                            <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-20 w-auto object-contain mb-5 hover:opacity-80 transition" />
+                        <Link href="/" className="flex items-center gap-4 mb-5 hover:opacity-80 transition">
+                            <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-14 sm:h-20 w-auto object-contain" /><img src="/images/Homepage/logo-fakultas-informatika.png" alt="Logo Fakultas Informatika" className="h-9 sm:h-12 w-auto object-contain" />
                         </Link>
-                        <h2 className="text-[33px] font-bold text-[#1A1C1D] mb-2">Selamat datang</h2>
-                        <p className="text-[#5A413D] text-[18px]">Fakultas Informatika, Telkom University</p>
+                        <h2 className="text-[33px] font-bold text-[#1A1C1D] mb-2">{t("Selamat datang")}</h2>
+                        <p className="text-[#5A413D] text-[18px]">{t("Fakultas Informatika, Telkom University")}</p>
                     </div>
 
                     {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
                     <form onSubmit={submit} className="space-y-6">
                         <div>
-                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-2">Email atau nama kamu</label>
+                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-2">{t("Email atau nama kamu")}</label>
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-[#E2BFB9]">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -52,7 +54,7 @@ export default function Login({ status }) {
                                     type="text"
                                     value={data.login}
                                     onChange={e => setData('login', e.target.value)}
-                                    placeholder="Masukkan email atau nama"
+                                    placeholder={t("Masukkan email atau nama")}
                                     className="w-full py-3 pl-11 pr-4 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111]"
                                 />
                             </div>
@@ -61,8 +63,8 @@ export default function Login({ status }) {
 
                         <div>
                             <div className="flex justify-between items-center mb-2">
-                                <label className="block text-[15px] font-bold text-[#1A1C1D]">Kata Sandi</label>
-                                <Link href="/forgot-password" className="text-[15px] font-bold text-[#570000] hover:underline">Lupa kata sandi?</Link>
+                                <label className="block text-[15px] font-bold text-[#1A1C1D]">{t("Kata Sandi")}</label>
+                                <Link href="/forgot-password" className="text-[15px] font-bold text-[#570000] hover:underline">{t("Lupa kata sandi?")}</Link>
                             </div>
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-[#E2BFB9]">
@@ -74,7 +76,7 @@ export default function Login({ status }) {
                                     type={showPassword ? "text" : "password"}
                                     value={data.password}
                                     onChange={e => setData('password', e.target.value)}
-                                    placeholder="Password"
+                                    placeholder={t("Kata sandi")}
                                     className="w-full py-3 pl-11 pr-11 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111] tracking-wider"
                                 />
                                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-gray-400 hover:text-gray-600 focus:outline-none">
@@ -93,25 +95,12 @@ export default function Login({ status }) {
                             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
                         </div>
 
-                        <div className="flex items-center">
-                            <input
-                                id="remember_me"
-                                type="checkbox"
-                                checked={data.remember}
-                                onChange={e => setData('remember', e.target.checked)}
-                                className="w-4 h-4 text-[#5A0404] border-gray-300 rounded focus:ring-[#5A0404]"
-                            />
-                            <label htmlFor="remember_me" className="ml-2 block text-[15px] text-[#5A413D]">
-                                Ingat selama 30 hari
-                            </label>
-                        </div>
-
                         <button
                             type="submit"
                             disabled={processing}
                             className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-[#570000] hover:bg-[#400404] transition duration-200"
                         >
-                            Login
+                            {t("Masuk")}
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                             </svg>
@@ -122,11 +111,11 @@ export default function Login({ status }) {
                     <div className="mt-8 text-center space-y-12">
                         <div className="space-y-3 flex flex-col items-center">
                             <p className="text-[15px] text-[#5A413D]">
-                                Belum punya akun? <Link href="/register" className="font-bold text-[#570000] hover:underline">Daftar akun</Link>
+                                {t("Belum punya akun?")} <Link href="/register" className="font-bold text-[#570000] hover:underline">{t("Daftar akun")}</Link>
                             </p>
                             <Link href="/" className="inline-flex items-center gap-1.5 text-[15px] font-bold text-gray-500 hover:text-[#570000] transition">
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                                Kembali ke Beranda
+                                {t("Kembali ke Beranda")}
                             </Link>
                         </div>
 
@@ -134,8 +123,9 @@ export default function Login({ status }) {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                             </svg>
-                            <span className="text-[13px] tracking-widest font-semibold uppercase text-[#5A413D]">Portal Akademik Aman</span>
+                            <span className="text-[13px] tracking-widest font-semibold uppercase text-[#5A413D]">{t("Portal Akademik Aman")}</span>
                         </div>
+                        <p className="text-xs text-gray-400">Developed by KP Branding Team 2026</p>
                     </div>
 
                 </div>

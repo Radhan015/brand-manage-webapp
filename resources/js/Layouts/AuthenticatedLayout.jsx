@@ -171,6 +171,7 @@ export default function AuthenticatedLayout({ header, children }) {
             )}
 
             <main>{children}</main>
+            <p className="text-center text-xs text-gray-400 py-6">Developed by KP Branding Team 2026</p>
         </div>
     );
 }

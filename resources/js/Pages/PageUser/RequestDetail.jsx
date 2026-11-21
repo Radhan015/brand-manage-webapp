@@ -1,18 +1,24 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
+import { useLang, LangSwitch } from '@/i18n';
+import NotificationBell from '@/Components/NotificationBell';
 
 export default function RequestDetail({ req }) {
+    const { t, intl } = useLang();
     // Filter out system notes if they exist
     const userNotes = req.additional_notes 
         ? req.additional_notes.split('---')[0].trim() 
         : '';
+    // Old requests kept the platform inside the notes text
     const platformMatch = req.additional_notes?.match(/\[Platform Upload: (.*?)\]/);
-    const platformUpload = platformMatch ? platformMatch[1] : "-";
+    const platformUpload = req.platforms?.length ? req.platforms.map(p => p.name).join(', ') : (platformMatch ? platformMatch[1] : "-");
+    const fmt = (d) => d ? new Date(d).toLocaleDateString(intl, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '-';
+    const range = (a, b) => !a ? '-' : (!b || a === b ? fmt(a) : `${fmt(a)} – ${fmt(b)}`);
 
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] font-sans text-gray-800 pb-12">
-            <Head title={`Request Detail - #${req.id}`} />
+            <Head title={`${t('Detail Permintaan')} #${req.id} | SIMACO`} />
             
             {/* Header Area */}
             <div className="bg-white border-b border-gray-200 sticky top-0 z-30">
@@ -22,8 +28,12 @@ export default function RequestDetail({ req }) {
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
-                            Kembali
+                            {t('Kembali')}
                         </Link>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <LangSwitch />
+                        <NotificationBell />
                     </div>
                 </div>
             </div>
@@ -34,7 +44,7 @@ export default function RequestDetail({ req }) {
                     {/* Header Section */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-6 mb-8 gap-4">
                         <div>
-                            <span className="text-sm font-bold text-[#800000] mb-2 block tracking-wider">DETAIL PERMINTAAN</span>
+                            <span className="text-sm font-bold text-[#800000] mb-2 block tracking-wider uppercase">{t('Detail Permintaan')}</span>
                             <h1 className="text-3xl font-bold text-gray-900">{req.event_name}</h1>
                         </div>
                         <span className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold ${
@@ -49,10 +59,10 @@ export default function RequestDetail({ req }) {
                                 req.status === 'new_request' ? 'bg-red-500' :
                                 'bg-blue-500'
                             }`}></span>
-                            {req.status === 'new_request' ? 'Baru' : 
-                             req.status === 'in_progress' ? 'Berjalan' : 
-                             req.status === 'completed' ? 'Selesai' : 
-                             req.status === 'rejected' ? 'Ditolak' : req.status}
+                            {req.status === 'new_request' ? t('Baru') : 
+                             req.status === 'in_progress' ? t('Berjalan') : 
+                             req.status === 'completed' ? t('Selesai') : 
+                             req.status === 'rejected' ? t('Ditolak') : req.status}
                         </span>
                     </div>
 
@@ -60,27 +70,35 @@ export default function RequestDetail({ req }) {
                         {/* Kiri - Informasi Utama */}
                         <div className="space-y-6">
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">TIPE PROYEK</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">{t('Tipe Proyek')}</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
-                                    {req.project_type || '-'}
+                                    {req.project_type?.name || '-'}
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">TIPE KONTEN (DURASI)</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">{t('Jenis Konten')}</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
-                                    {req.content_type === 'sehari' ? 'Sehari' : (req.content_type === 'lebih_dari_sehari' ? 'Lebih dari sehari' : (req.content_type || '-'))}
+                                    {req.content_type === 'single' ? t('Sekali Tayang') : (req.content_type === 'series' ? t('Konten Series') : '-')}
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">NAMA SERIAL KONTEN</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">{t('Nama Serial Konten')}</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
-                                    {req.theme_category_group || '-'}
+                                    {req.serial_name || '-'}{req.theme_category_group ? ` (${req.theme_category_group})` : ''}
                                 </p>
                             </div>
+                            {req.content_type === 'series' && (
+                                <div>
+                                    <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">{t('Periode Tayang Series')}</h3>
+                                    <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
+                                        {range(req.series_start_date, req.series_end_date)}
+                                    </p>
+                                </div>
+                            )}
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">PIC (PENANGGUNG JAWAB)</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">{t('PIC (Penanggung Jawab)')}</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
-                                    {req.content?.pic?.name || 'Belum Ditugaskan'}
+                                    {req.content?.pic?.name || t('Belum Ditugaskan')}
                                 </p>
                             </div>
                         </div>
@@ -88,19 +106,19 @@ export default function RequestDetail({ req }) {
                         {/* Kanan - Waktu & Tenggat */}
                         <div className="space-y-6">
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">TANGGAL ACARA</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">{t('Tanggal Acara')}</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
-                                    {req.event_end_date ? new Date(req.event_end_date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
+                                    {range(req.event_start_date, req.event_end_date)}
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">DEADLINE KONTEN</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">{t('Tenggat Waktu Konten')}</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
-                                    {req.event_start_date ? new Date(req.event_start_date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
+                                    {fmt(req.content_deadline)}
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">PLATFORM UPLOAD</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-2">{t('Platform Tujuan')}</h3>
                                 <p className="text-[16px] text-gray-800 font-medium bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
                                     {platformUpload}
                                 </p>
@@ -110,15 +128,15 @@ export default function RequestDetail({ req }) {
 
                     <div className="space-y-8 border-t border-gray-100 pt-8">
                         <div>
-                            <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">DESKRIPSI KEBUTUHAN</h3>
+                            <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">{t('Deskripsi Kebutuhan')}</h3>
                             <div className="bg-[#F8F9FA] p-5 rounded-lg text-[15px] text-gray-800 leading-relaxed border border-gray-100 whitespace-pre-wrap">
-                                {req.description || 'Tidak ada deskripsi'}
+                                {req.description || t('Tidak ada deskripsi')}
                             </div>
                         </div>
 
                         {userNotes && (
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">CATATAN TAMBAHAN</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">{t('Catatan Tambahan')}</h3>
                                 <div className="bg-[#F8F9FA] p-5 rounded-lg text-[15px] text-gray-800 leading-relaxed border border-gray-100 whitespace-pre-wrap">
                                     {userNotes}
                                 </div>
@@ -127,7 +145,7 @@ export default function RequestDetail({ req }) {
 
                         {req.status === 'completed' && req.content?.output_url && (
                             <div>
-                                <h3 className="text-[12px] font-bold text-green-700 uppercase tracking-wider mb-3">TAUTAN HASIL / OUTPUT PEKERJAAN</h3>
+                                <h3 className="text-[12px] font-bold text-green-700 uppercase tracking-wider mb-3">{t('Tautan Hasil / Output Pekerjaan')}</h3>
                                 <div className="bg-green-50 border border-green-100 rounded-lg p-4 flex items-center gap-3">
                                     <svg className="w-6 h-6 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -141,11 +159,15 @@ export default function RequestDetail({ req }) {
 
                         {req.assets && req.assets.length > 0 && (
                             <div>
-                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">TAUTAN MATERI / REFERENSI</h3>
+                                <h3 className="text-[12px] font-bold text-[#5A413D] uppercase tracking-wider mb-3">{t('Materi / Referensi')}</h3>
                                 <div className="space-y-3">
                                     {req.assets.map(asset => (
                                         <div key={asset.id} className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-[15px] text-gray-800 whitespace-pre-wrap leading-relaxed">
-                                            {asset.drive_url.split(/(\s+)/).map((word, i) => {
+                                            {asset.asset_type === 'upload' ? (
+                                                <a href={`/assets/${asset.id}/file`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-blue-800 font-bold hover:underline break-all">
+                                                    📎 {asset.asset_name}
+                                                </a>
+                                            ) : (asset.drive_url || '').split(/(\s+)/).map((word, i) => {
                                                 if (word.match(/^https?:\/\//i) || word.match(/^www\./i)) {
                                                     const href = word.startsWith('http') ? word : `https://${word}`;
                                                     return (
@@ -165,14 +187,14 @@ export default function RequestDetail({ req }) {
 
                         {req.review_feedback && (
                             <div className="bg-red-50 border border-red-100 rounded-lg p-5">
-                                <h3 className="text-[12px] font-bold text-red-800 uppercase tracking-wider mb-2">FEEDBACK DARI TIM BRANDING</h3>
+                                <h3 className="text-[12px] font-bold text-red-800 uppercase tracking-wider mb-2">{t('Feedback dari Tim Branding')}</h3>
                                 <p className="text-[15px] text-red-900 leading-relaxed whitespace-pre-wrap">{req.review_feedback}</p>
                             </div>
                         )}
 
                         {req.status === 'rejected' && req.reject_reason && (
                             <div className="bg-red-50 border border-red-100 rounded-lg p-5">
-                                <h3 className="text-[12px] font-bold text-red-800 uppercase tracking-wider mb-2">ALASAN PENOLAKAN</h3>
+                                <h3 className="text-[12px] font-bold text-red-800 uppercase tracking-wider mb-2">{t('Alasan Penolakan')}</h3>
                                 <p className="text-[15px] text-red-900 leading-relaxed whitespace-pre-wrap">{req.reject_reason}</p>
                             </div>
                         )}
@@ -180,6 +202,7 @@ export default function RequestDetail({ req }) {
 
                 </div>
             </main>
+            <p className="text-center text-xs text-gray-400 py-6">Developed by KP Branding Team 2026</p>
         </div>
     );
 }

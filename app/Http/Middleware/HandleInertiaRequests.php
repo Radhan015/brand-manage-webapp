@@ -34,6 +34,12 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'locale' => app()->getLocale(),
+            // PRD R18: bell for admins and staff (lazy: only computed when the page is rendered)
+            'notifications' => fn () => in_array($request->user()?->role, ['admin', 'staff'], true) ? [
+                'unread' => $request->user()->unreadNotifications()->count(),
+                'items' => $request->user()->notifications()->take(10)->get(['id', 'data', 'read_at', 'created_at']),
+            ] : null,
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),

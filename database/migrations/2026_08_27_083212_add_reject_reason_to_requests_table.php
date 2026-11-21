@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('requests', 'reject_reason')) return; // already exists in hand-built DBs
+
         Schema::table('requests', function (Blueprint $table) {
             $table->text('reject_reason')->nullable();
         });

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,59 +13,27 @@ class DatabaseSeeder extends Seeder
 
     /**
      * Seed the application's database.
+     * Real staff accounts are not seeded: they log in (later via SSO) and an admin sets their role in Master Data Staf.
      */
     public function run(): void
     {
-        // Admin
+        $this->call(MasterDataSeeder::class);
+
+        // Never keep real passwords in the repo: take it from .env, or generate one and print it once.
+        $password = env('SEED_DEFAULT_PASSWORD') ?: Str::random(16);
+
         User::updateOrCreate(
             ['email' => 'admin@simaco.com'],
-            [
-                'name' => 'Admin Branding',
-                'password_hash' => bcrypt('admin123'),
-                'role' => 'admin',
-                'phone_number' => '081234567890',
-            ]
+            ['name' => 'Admin Branding', 'password_hash' => $password, 'role' => 'admin']
         );
 
-        // Regular User / Pemohon
         User::updateOrCreate(
             ['email' => 'user@telkomuniversity.ac.id'],
-            [
-                'name' => 'Mahasiswa / Dosen',
-                'password_hash' => bcrypt('user123'),
-                'role' => 'user',
-                'phone_number' => '089876543210',
-            ]
+            ['name' => 'Mahasiswa / Dosen', 'password_hash' => $password, 'role' => 'user']
         );
 
-        User::updateOrCreate(
-            ['email' => 'yeyenthamrie@gmail.com'],
-            [
-                'name' => 'Yeyen Hamidah',
-                'password_hash' => bcrypt('Alvin150214!'),
-                'role' => 'admin',
-                'phone_number' => '085711945328',
-            ]
-        );
-
-        User::updateOrCreate(
-            ['email' => 'mharsyasadin656@gmail.com'],
-            [
-                'name' => 'Harsya Sadin',
-                'password_hash' => bcrypt('Gehuenak12345.'),
-                'role' => 'admin',
-                'phone_number' => '089603059913',
-            ]
-        );
-
-        User::updateOrCreate(
-            ['email' => 'adminFIF@gmail.com'],
-            [
-                'name' => 'Admin FIF',
-                'password_hash' => bcrypt('adminfif123'),
-                'role' => 'admin',
-                'phone_number' => '081234567',
-            ]
-        );
+        if (! env('SEED_DEFAULT_PASSWORD')) {
+            $this->command?->warn("Password akun seed (admin@simaco.com & user@telkomuniversity.ac.id): {$password}");
+        }
     }
 }

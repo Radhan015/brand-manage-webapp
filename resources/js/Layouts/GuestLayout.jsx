@@ -1,9 +1,11 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import { Link } from '@inertiajs/react';
+import { LangSwitch } from '@/i18n';
 
 export default function GuestLayout({ children }) {
     return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
+        <div className="relative flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
+            <LangSwitch className="absolute top-4 right-4" />
             <div>
                 <Link href="/">
                     <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />
@@ -13,6 +15,7 @@ export default function GuestLayout({ children }) {
             <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
                 {children}
             </div>
+            <p className="mt-6 text-xs text-gray-400">Developed by KP Branding Team 2026</p>
         </div>
     );
 }

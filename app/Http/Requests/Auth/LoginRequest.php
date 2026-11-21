@@ -40,11 +40,19 @@ class LoginRequest extends FormRequest
         $login = $this->input('login');
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
-        if (! Auth::attempt([$field => $login, 'password' => $this->input('password')], $this->boolean('remember'))) {
+        // Deactivated accounts (Master Data Staf) cannot log in; checked only after the password matched
+        $inactive = false;
+        $ok = Auth::attemptWhen(
+            [$field => $login, 'password' => $this->input('password')],
+            function ($user) use (&$inactive) { return ! ($inactive = ! $user->is_active); },
+            false, // no "remember me": it would bypass the idle/absolute session timeouts (PRD R3)
+        );
+
+        if (! $ok) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'login' => 'Email atau nama salah, atau kata sandi tidak cocok.',
+                'login' => $inactive ? __('Akun Anda sedang dinonaktifkan. Hubungi admin.') : __('Email atau nama salah, atau kata sandi tidak cocok.'),
             ]);
         }
 

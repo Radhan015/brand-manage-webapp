@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useLang, LangSwitch } from "@/i18n";
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Register() {
+    const { t } = useLang();
     const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors } = useForm({
         name: '',
@@ -18,33 +20,34 @@ export default function Register() {
 
     return (
         <div className="min-h-screen flex font-sans bg-[#F9F9F9]">
-            <Head title="Register | SIMACO" />
+            <Head title={`${t("Daftar Akun")} | SIMACO`} />
             <div className="hidden lg:flex lg:w-[35%] relative bg-white">
                 <img src="/images/Login/TULT.jpg" alt="Telkom University Building" className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-[#4A0B0B] opacity-80 mix-blend-multiply"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2c0404] via-transparent to-transparent opacity-90"></div>
                 <div className="relative z-10 flex flex-col justify-end p-12 lg:p-16 w-full h-full text-white">
-                    <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 tracking-tight">Tingkatkan<br />Identitas Institusi</h1>
-                    <p className="text-[#FFB4A8] text-[19px] max-w-md mb-8 leading-relaxed">Menyederhanakan distribusi dan konsistensi aset merek untuk Fakultas Informatika.</p>
+                    <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4 tracking-tight">{t("Tingkatkan")}<br />{t("Identitas Institusi")}</h1>
+                    <p className="text-[#FFB4A8] text-[19px] max-w-md mb-8 leading-relaxed">{t("Menyederhanakan distribusi dan konsistensi aset merek untuk Fakultas Informatika.")}</p>
                 </div>
             </div>
 
-            <div className="w-full lg:w-[55%] flex flex-col justify-center items-center p-8 sm:p-12">
+            <div className="relative w-full lg:w-[55%] flex flex-col justify-center items-center p-8 sm:p-12">
+                <LangSwitch className="absolute top-4 right-4" />
                 <div className="w-full max-w-[400px]">
                     <div className="mb-5">
-                        <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-20 w-auto object-contain mb-1" />
-                        <h2 className="text-[33px] font-bold text-[#1A1C1D] mb-1">Daftar Akun</h2>
-                        <p className="text-[#5A413D] text-[18px]">Fakultas Informatika, Telkom University</p>
+                        <div className="flex items-center gap-4 mb-1"><img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-14 sm:h-20 w-auto object-contain" /><img src="/images/Homepage/logo-fakultas-informatika.png" alt="Logo Fakultas Informatika" className="h-9 sm:h-12 w-auto object-contain" /></div>
+                        <h2 className="text-[33px] font-bold text-[#1A1C1D] mb-1">{t("Daftar Akun")}</h2>
+                        <p className="text-[#5A413D] text-[18px]">{t("Fakultas Informatika, Telkom University")}</p>
                     </div>
 
                     <form onSubmit={submit} className="space-y-4">
                         <div>
-                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">Nama Lengkap</label>
+                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">{t("Nama Lengkap")}</label>
                             <input
                                 type="text"
                                 value={data.name}
                                 onChange={e => setData('name', e.target.value)}
-                                placeholder="Masukkan nama"
+                                placeholder={t("Masukkan nama")}
                                 className="w-full py-3 px-4 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111]"
                             />
                             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
@@ -56,32 +59,32 @@ export default function Register() {
                                 type="email"
                                 value={data.email}
                                 onChange={e => setData('email', e.target.value)}
-                                placeholder="Masukkan email"
+                                placeholder={t("Masukkan email")}
                                 className="w-full py-3 px-4 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111]"
                             />
                             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                         </div>
 
                         <div>
-                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">Nomor Telepon (WA)</label>
+                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">{t("Nomor Telepon (WA)")}</label>
                             <input
                                 type="text"
                                 value={data.phone_number}
                                 onChange={e => setData('phone_number', e.target.value)}
-                                placeholder="Contoh: 08123456789"
+                                placeholder={t("Contoh: 08123456789")}
                                 className="w-full py-3 px-4 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111]"
                             />
                             {errors.phone_number && <p className="text-red-500 text-xs mt-1">{errors.phone_number}</p>}
                         </div>
 
                         <div>
-                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">Kata Sandi</label>
+                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">{t("Kata Sandi")}</label>
                             <div className="relative flex items-center">
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     value={data.password}
                                     onChange={e => setData('password', e.target.value)}
-                                    placeholder="Password"
+                                    placeholder={t("Kata sandi")}
                                     className="w-full py-3 px-4 pr-11 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111]"
                                 />
                                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-gray-400 hover:text-gray-600 focus:outline-none">
@@ -101,13 +104,13 @@ export default function Register() {
                         </div>
 
                         <div>
-                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">Konfirmasi Kata Sandi</label>
+                            <label className="block text-[15px] font-bold text-[#1A1C1D] mb-1">{t("Konfirmasi Kata Sandi")}</label>
                             <div className="relative flex items-center">
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     value={data.password_confirmation}
                                     onChange={e => setData('password_confirmation', e.target.value)}
-                                    placeholder="Ketik ulang password"
+                                    placeholder={t("Ketik ulang kata sandi")}
                                     className="w-full py-3 px-4 border border-[#E2BFB9] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6B1111]"
                                 />
                             </div>
@@ -118,14 +121,15 @@ export default function Register() {
                             disabled={processing}
                             className="w-full flex justify-center items-center py-3 px-4 mt-4 rounded-lg shadow-sm text-sm font-semibold text-white bg-[#570000] hover:bg-[#400404]"
                         >
-                            Daftar Sekarang
+                            {t("Daftar Sekarang")}
                         </button>
                     </form>
 
                     <div className="mt-5 text-center">
                         <p className="text-[15px] text-[#5A413D]">
-                            Sudah punya akun? <Link href="/login" className="font-bold text-[#570000] hover:underline">Masuk </Link>
+                            {t("Sudah punya akun?")} <Link href="/login" className="font-bold text-[#570000] hover:underline">{t("Masuk")}</Link>
                         </p>
+                        <p className="text-xs text-gray-400 mt-6">Developed by KP Branding Team 2026</p>
                     </div>
                 </div>
             </div>

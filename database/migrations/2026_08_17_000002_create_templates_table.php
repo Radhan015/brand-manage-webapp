@@ -8,6 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('templates')) return; // already exists in hand-built DBs
+
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
             $table->string('template_name');

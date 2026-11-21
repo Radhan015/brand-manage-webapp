@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
+import { useLang, LangSwitch } from '@/i18n';
 
 export default function Homepage({ auth }) {
+    const { t, locale } = useLang();
     const [activeSection, setActiveSection] = useState('tentang');
     const scrollToSection = (e, sectionId) => {
         e.preventDefault();
@@ -20,7 +22,7 @@ export default function Homepage({ auth }) {
     // scroll efeknya
     useEffect(() => {
         const handleScroll = () => {
-            const sections = ['tentang', 'benefits', 'team', 'request', 'contact'];
+            const sections = ['tentang', 'benefits', 'request', 'contact'];
             const scrollPosition = window.scrollY + 100;
 
             sections.forEach(section => {
@@ -39,90 +41,27 @@ export default function Homepage({ auth }) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
     const navLinks = [
-        { id: 'tentang', label: 'Tentang' },
+        { id: 'tentang', label: t('Tentang') },
         { id: 'benefits', label: 'Benefits' },
-        { id: 'team', label: 'Branding Team' },
-        { id: 'request', label: 'Dashboard Request' },
-        { id: 'contact', label: 'Contact Us' },
+        { id: 'request', label: t('Request') },
+        { id: 'contact', label: t('Hubungi Kami') },
     ];
-
-    // state untuk mengontrol slide yang sedang aktif
-    const [currentSlide, setCurrentSlide] = useState(0);
-
-    // data untuk carousel tim branding beserta posisi labelnya
-    const teamSlides = [
-        {
-            id: 1,
-            image: "/images/Homepage/team-slide-1.png", 
-            heightClass: "h-[150%] sm:h-[120%] md:h-[125%] lg:h-[130%]",
-            labels: [
-                { name: "Mochamad Febry Aridlo", role: "Sekpim FIF (Mentor Lapangan)", top: "70%", left: "25%" },
-                { name: "Irma Palupi", role: "Kaur Sekpim FIF (Pembimbing)", top: "75%", left: "75%" }
-            ]
-        },
-        {
-            id: 2,
-            image: "/images/Homepage/team-slide-2.png",
-            heightClass: "h-[115%] sm:h-[120%] md:h-[125%] lg:h-[115%]",
-            labels: [
-                { name: "Ken Diva", role: "Koordinator Analytics", top: "75%", left: "20%" },
-                { name: "Muhamad Harsya Sadin", role: "Koordinator Social Media", top: "85%", left: "50%" },
-                { name: "Yeyen Hamidah", role: "PIC Branding Fakultas FIF", top: "70%", left: "80%" }
-            ]
-        },
-        {
-            id: 3,
-            image: "/images/Homepage/team-slide-3.png",
-            heightClass: "h-[150%] sm:h-[140%] md:h-[160%] lg:h-[160%]",
-            labels: [
-                { name: "Hasanul Fikri", role: "UI/UX Design Website", top: "82%", left: "30%" },
-                { name: "M Naufal Ramadhan", role: "UI/UX Design Website", top: "70%", left: "70%" }
-            ]
-        },
-        {
-            id: 4,
-            image: "/images/Homepage/team-slide-4.png",
-            heightClass: "h-[200%] sm:h-[140%] md:h-[160%] lg:h-[180%]",
-            bottomClass: "-bottom-20 md:-bottom-24 lg:-bottom-20",
-            labels: [
-                { name: "Novel Shiffa Octaviani", role: "Data Analytics", top: "75%", left: "35%" },
-                { name: "Moh Fadly Ahmad Sehabudin", role: "Data Analytics", top: "80%", left: "75%" }
-            ]
-        },
-        {
-            id: 5,
-            image: "/images/Homepage/team-slide-5.png",
-            heightClass: "h-[200%] sm:h-[140%] md:h-[160%] lg:h-[190%]",
-            labels: [
-                { name: "Irvan Tegar Yunadi", role: "Media & Creative", top: "70%", left: "35%" },
-                { name: "Bagus Hardiyanto", role: "Media & Creative", top: "60%", left: "65%" }
-            ]
-        }
-    ];
-
-    // efek untuk autoplay carousel (berpindah setiap 4 detik) bisa diubah juga kalo emang kecepetan
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentSlide((prevSlide) => (prevSlide + 1) % teamSlides.length);
-        }, 4000);
-        return () => clearInterval(timer);
-    }, []);
 
     return (
         <div className="min-h-screen bg-white font-sans text-gray-800 overflow-x-hidden">
-            <Head title="Beranda | SIMACO" />
-            <nav className="w-full bg-white shadow-sm py-4 px-8 flex justify-between items-center fixed top-0 z-50">
+            <Head title={`${t('Beranda')} | SIMACO`} />
+            <nav className="w-full bg-white shadow-sm py-4 px-4 md:px-8 flex justify-between items-center fixed top-0 z-50">
                 <div className="flex items-center gap-2">
-                    <a href="/">
+                    <a href="/" className="flex items-center">
                         <img
                             src="/images/Homepage/logoSimaco-removebg-preview.png"
                             alt="Logo SiMaCo"
-                            className="h-12 w-auto object-contain"
-                        />
+                            className="h-8 sm:h-12 w-auto object-contain"
+                        /><img src="/images/Homepage/logo-fakultas-informatika.png" alt="Logo Fakultas Informatika" className="h-8 sm:h-12 w-auto object-contain ml-3" />
                     </a>
                 </div>
 
-                <div className="hidden md:flex space-x-8 font-medium text-gray-600">
+                <div className="hidden lg:flex space-x-8 font-medium text-gray-600">
                     {navLinks.map((link) => (
                         <a
                             key={link.id}
@@ -138,9 +77,11 @@ export default function Homepage({ auth }) {
                     ))}
                 </div>
 
+                <div className="flex items-center gap-3">
+                <LangSwitch />
                 {auth?.user ? (
-                    <div className="relative group cursor-pointer">
-                        <div className="text-right hidden sm:block pr-2">
+                    <div className="relative group cursor-pointer hidden lg:block">
+                        <div className="text-right pr-2">
                             <p className="text-sm font-bold text-gray-900">{auth.user.name}</p>
                             <p className="text-xs text-gray-500">{auth.user.email}</p>
                         </div>
@@ -155,11 +96,41 @@ export default function Homepage({ auth }) {
                 ) : (
                     <Link
                         href="/login"
-                        className="bg-[#800000] text-white px-6 py-2 rounded-md font-semibold hover:bg-red-900 transition"
+                        className="hidden lg:inline-block bg-[#800000] text-white px-6 py-2 rounded-md font-semibold hover:bg-red-900 transition"
                     >
                         Login
                     </Link>
                 )}
+                <label htmlFor="home-nav" aria-label={t('Buka menu')} className="lg:hidden p-2 -mr-2 rounded-lg hover:bg-gray-100 cursor-pointer text-[#800000]">
+                    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </label>
+                </div>
+
+                {/* Mobile menu (below lg): links + account, toggled without JS state */}
+                <input type="checkbox" id="home-nav" className="peer sr-only" aria-label={t('Tampilkan menu')} />
+                <div className="hidden peer-checked:flex lg:hidden absolute top-full left-0 right-0 bg-white shadow-md border-t border-gray-100 flex-col px-6 py-4 gap-1 font-medium text-gray-700">
+                    {navLinks.map((link) => (
+                        <a
+                            key={link.id}
+                            href={`#${link.id}`}
+                            onClick={(e) => { document.getElementById('home-nav').checked = false; scrollToSection(e, link.id); }}
+                            className={`py-2 ${activeSection === link.id ? 'text-red-800 font-bold' : ''}`}
+                        >
+                            {link.label}
+                        </a>
+                    ))}
+                    <div className="border-t border-gray-100 mt-2 pt-3">
+                        {auth?.user ? (
+                            <>
+                                <p className="text-sm font-bold text-gray-900">{auth.user.name}</p>
+                                <p className="text-xs text-gray-500 mb-3">{auth.user.email}</p>
+                                <Link href={route('logout')} method="post" as="button" className="text-sm font-semibold text-red-600">Log Out</Link>
+                            </>
+                        ) : (
+                            <Link href="/login" className="inline-block bg-[#800000] text-white px-6 py-2 rounded-md font-semibold">Login</Link>
+                        )}
+                    </div>
+                </div>
             </nav>
 
             {/* ini Bagian Hero */}
@@ -171,26 +142,28 @@ export default function Homepage({ auth }) {
                 }}
             >
                 <div className="max-w-2xl">
-                    <h1 className="text-6xl font-bold leading-[1.1] mb-6 text-gray-900 tracking-tight">
-                        Solusi Branding <br />
-                        <span className="text-[#800000]">Profesional</span> untuk <br />
-                        Fakultas Informatika
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 text-gray-900 tracking-tight">
+                        {locale === 'en' ? (
+                            <><span className="text-[#800000]">Professional</span> Branding <br />Solutions for the <br />School of Computing</>
+                        ) : (
+                            <>Solusi Branding <br /><span className="text-[#800000]">Profesional</span> untuk <br />Fakultas Informatika</>
+                        )}
                     </h1>
                     <p className="text-[#5A413D] mb-8 text-lg leading-relaxed max-w-xl">
-                        SIMACO memudahkan proses permintaan konten, menjaga desain tetap seragam, dan mempercepat pembagian aset promosi di Fakultas Informatika.
+                        {t('SIMACO memudahkan proses permintaan konten, menjaga desain tetap seragam, dan mempercepat pembagian aset promosi di Fakultas Informatika.')}
                     </p>
                     <Link href="/my-requests" className="inline-block bg-[#800000] text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-900 transition shadow-lg text-lg">
-                        Dashboard Request
+                        {t('Request')}
                     </Link>
                 </div>
             </section>
 
             {/* Ini About/Tentang */}
             <section id="tentang" className="py-20 px-8 md:px-16 text-center bg-white">
-                <h2 className="text-4xl font-bold mb-1 text-gray-900">Tentang SIMACO</h2>
+                <h2 className="text-4xl font-bold mb-1 text-gray-900">{t('Tentang SIMACO')}</h2>
                 <div className="w-12 h-1 bg-[#800000] mx-auto mb-8"></div>
                 <p className="max-w-4xl mx-auto text-[#5A413D] text-[17px] leading-relaxed mb-16">
-                    Sistem Manajemen Content (SIMACO) adalah platform untuk tim branding Fakultas Informatika Universitas Telkom. Kami mengelola permintaan konten kreatif, membagikan aset desain, dan menyediakan template standar agar komunikasi visual fakultas tetap seragam.
+                    {t('Sistem Manajemen Content (SIMACO) adalah platform untuk tim branding Fakultas Informatika Universitas Telkom. Kami mengelola permintaan konten kreatif, membagikan aset desain, dan menyediakan template standar agar komunikasi visual fakultas tetap seragam.')}
                 </p>
 
                 {/* logo-logo di tentang */}
@@ -210,8 +183,8 @@ export default function Homepage({ auth }) {
             {/* ini bagian benefit */}
             <section id="benefits" className="py-20 px-8 md:px-16 bg-[#F4F4F5]">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold mb-2 text-gray-900">Mengapa Memilih Kami?</h2>
-                    <p className="text-[#8C6B6B] font-medium">Keunggulan layanan manajemen konten SIMACO.</p>
+                    <h2 className="text-3xl font-bold mb-2 text-gray-900">{t('Mengapa Memilih Kami?')}</h2>
+                    <p className="text-[#8C6B6B] font-medium">{t('Keunggulan layanan manajemen konten SIMACO.')}</p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -225,9 +198,9 @@ export default function Homepage({ auth }) {
                                 <rect x="12" y="10.5" width="7" height="6" fill="#fee2e2" />
                             </svg>
                         </div>
-                        <h3 className="text-xl font-bold mb-3 text-gray-900">Konsistensi Brand</h3>
+                        <h3 className="text-xl font-bold mb-3 text-gray-900">{t('Konsistensi Brand')}</h3>
                         <p className="text-gray-600 text-sm leading-relaxed">
-                            Materi konten selalu mengikuti pedoman visual universitas agar desain tetap seragam.
+                            {t('Materi konten selalu mengikuti pedoman visual universitas agar desain tetap seragam.')}
                         </p>
                     </div>
                     {/* Card efisiensi kerja */}
@@ -242,9 +215,9 @@ export default function Homepage({ auth }) {
                                 <polygon points="17.5,9 10.8,15.6 13.2,17.4" fill="#fee2e2" />
                             </svg>
                         </div>
-                        <h3 className="text-xl font-bold mb-3 text-gray-900">Efisiensi Kerja</h3>
+                        <h3 className="text-xl font-bold mb-3 text-gray-900">{t('Efisiensi Kerja')}</h3>
                         <p className="text-gray-600 text-sm leading-relaxed">
-                            Alur pengajuan permintaan, revisi, hingga pengiriman aset ke pemohon menjadi lebih cepat.
+                            {t('Alur pengajuan permintaan, revisi, hingga pengiriman aset ke pemohon menjadi lebih cepat.')}
                         </p>
                     </div>
                     {/* Card akses mudah */}
@@ -257,62 +230,11 @@ export default function Homepage({ auth }) {
                                 <path d="M10.5 17l-3-3 1.4-1.4 1.6 1.6 4.6-4.6 1.4 1.4-6 6z" fill="#fee2e2" />
                             </svg>
                         </div>
-                        <h3 className="text-xl font-bold mb-3 text-gray-900">Akses Mudah</h3>
+                        <h3 className="text-xl font-bold mb-3 text-gray-900">{t('Akses Mudah')}</h3>
                         <p className="text-[#5A413D] text-sm leading-relaxed">
-                            Staf dan dosen dapat mengunduh materi promosi kapan saja melalui repositori tautan.
+                            {t('Staf dan dosen dapat mengunduh materi promosi kapan saja melalui repositori tautan.')}
                         </p>
                     </div>
-                </div>
-            </section>
-
-            {/* bagian TEAM */}
-            <section id="team" className="py-10 md:py-12 px-8 md:px-16 bg-white flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
-                <div className="md:w-5/12 md:pl-20 lg:pl-32 z-20">
-                    <h2 className="text-4xl font-bold mb-4 text-gray-900">Branding Team</h2>
-                    <p className="text-[#5A413D] leading-relaxed text-lg max-w-md">
-                        Profesional di balik manajemen brand Fakultas Informatika. Yang berdedikasi dalam membangun, mengelola, dan memperkuat identitas serta citra digital Fakultas Informatika.
-                    </p>
-
-                    {/* navigasi dot */}
-                    <div className="flex gap-2 mt-8">
-                        {teamSlides.map((_, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => setCurrentSlide(idx)}
-                                className={`h-2.5 rounded-full transition-all duration-5000 ${currentSlide === idx ? 'w-8 bg-[#570000]' : 'w-2.5 bg-gray-300 hover:bg-gray-400'}`}
-                                aria-label={`Go to slide ${idx + 1}`}
-                            />
-                        ))}
-                    </div>
-                </div>
-
-                {/* area gambar carouselnya */}
-                <div className="md:w-7/12 relative flex justify-center items-end mt-10 md:mt-0 h-[350px] md:h-[400px] w-full z-10">
-                    {teamSlides.map((slide, index) => (
-                        <div
-                            key={slide.id}
-                            className={`absolute inset-0 w-full h-full transition-opacity duration-5000 ease-in-out ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                        >
-                            {/* gambar orang */}
-                            <img
-                                src={slide.image}
-                                alt="Tim Branding"
-                                className={`absolute ${slide.bottomClass ? slide.bottomClass : '-bottom-10 md:-bottom-12'} left-1/2 transform -translate-x-1/2 ${slide.heightClass ? slide.heightClass : 'h-[160%] sm:h-[170%] md:h-[185%] lg:h-[150%]'} w-auto max-w-none object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.4)] origin-bottom`}
-                            />
-
-                            {/* label nama & jabatannya*/}
-                            {slide.labels.map((label, labelIdx) => (
-                                <div
-                                    key={labelIdx}
-                                    style={{ top: label.top, left: label.left }}
-                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 bg-white/85 backdrop-blur-md border-[1.5px] border-gray-800 rounded-md px-4 py-2.5 shadow-[0_4px_15px_rgba(0,0,0,0.1)] min-w-max z-30"
-                                >
-                                    <p className="text-[13px] md:text-[15px] font-bold text-gray-900 leading-tight mb-0.5">{label.name}</p>
-                                    <p className="text-[11px] md:text-[13px] italic text-gray-700 leading-tight">{label.role}</p>
-                                </div>
-                            ))}
-                        </div>
-                    ))}
                 </div>
             </section>
 
@@ -325,12 +247,12 @@ export default function Homepage({ auth }) {
                 }}
             >
                 <div className="relative z-10 text-gray-900 max-w-2xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-4">Request Liputan mu Sekarang!</h2>
+                    <h2 className="text-3xl font-bold mb-4">{t('Request Liputan mu Sekarang!')}</h2>
                     <p className="mb-8 text-[#5A413D]">
-                        SIMACO memudahkan proses permintaan konten, menjaga desain tetap seragam, dan mempercepat pembagian aset promosi di Fakultas Informatika.
+                        {t('SIMACO memudahkan proses permintaan konten, menjaga desain tetap seragam, dan mempercepat pembagian aset promosi di Fakultas Informatika.')}
                     </p>
                     <Link href="/my-requests" className="inline-block bg-[#800000] text-white px-8 py-3 rounded-md font-semibold hover:bg-red-900 transition shadow-lg">
-                        Dashboard Request
+                        {t('Request')}
                     </Link>
                 </div>
             </section>
@@ -341,7 +263,7 @@ export default function Homepage({ auth }) {
                     {/* Info */}
                     <div className="col-span-1 md:col-span-2">
                         <div className="flex items-center mb-6">
-                            <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-20 w-auto object-contain" />
+                            <img src="/images/Homepage/logoSimaco-removebg-preview.png" alt="Logo SiMaCo" className="h-12 sm:h-20 w-auto object-contain" /><img src="/images/Homepage/logo-fakultas-informatika.png" alt="Logo Fakultas Informatika" className="h-12 sm:h-20 w-auto object-contain ml-3" />
                         </div>
                         <div className="space-y-4 text-sm text-gray-600">
                             <p className="flex items-start gap-2">
@@ -363,17 +285,18 @@ export default function Homepage({ auth }) {
                     {/* Links */}
                     <div className="flex gap-16 justify-end">
                         <div className="flex flex-col space-y-4">
-                            <a href="#" className="font-semibold text-[#8B0000]">Home</a>
-                            <a href="#tentang" className="text-gray-600 hover:text-red-800">Tentang</a>
+                            <a href="#" className="font-semibold text-[#8B0000]">{t('Beranda')}</a>
+                            <a href="#tentang" className="text-gray-600 hover:text-red-800">{t('Tentang')}</a>
                         </div>
                         <div className="flex flex-col space-y-4">
-                            <span className="font-semibold text-[#8B0000]">Layanan</span>
-                            <Link href="/request-form" className="text-gray-600 hover:text-red-800">Request Konten</Link>
-                            <Link href="/my-requests" className="text-gray-600 hover:text-red-800">Daftar Request Saya</Link>
-                            <a href="#contact" className="text-gray-600 hover:text-red-800">Hubungi Kami</a>
+                            <span className="font-semibold text-[#8B0000]">{t('Layanan')}</span>
+                            <Link href="/request-form" className="text-gray-600 hover:text-red-800">{t('Request Konten')}</Link>
+                            <Link href="/my-requests" className="text-gray-600 hover:text-red-800">{t('Daftar Request Saya')}</Link>
+                            <a href="#contact" className="text-gray-600 hover:text-red-800">{t('Hubungi Kami')}</a>
                         </div>
                     </div>
                 </div>
+                <p className="max-w-6xl mx-auto mt-10 pt-6 border-t border-gray-300 text-center text-xs text-gray-500">Developed by KP Branding Team 2026</p>
             </footer>
         </div>
     );

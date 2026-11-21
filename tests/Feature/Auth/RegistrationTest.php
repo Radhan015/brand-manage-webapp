@@ -21,11 +21,14 @@ class RegistrationTest extends TestCase
         $response = $this->post('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'phone_number' => '08123456789',
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        // SiMaCo does not log in right after registering: the user is sent to the login page
+        $this->assertGuest();
+        $response->assertRedirect(route('login', absolute: false))->assertSessionHas('status');
+        $this->assertDatabaseHas('users_simaco', ['email' => 'test@example.com', 'role' => 'user']);
     }
 }
